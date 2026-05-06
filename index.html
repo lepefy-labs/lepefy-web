@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lepefy — Trova le occasioni prima degli altri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0e0c;
+      --surface:   #141510;
+      --border:    #242420;
+      --accent:    #d4f02a;
+      --accent-dim:#a0b820;
+      --text:      #e8e6df;
+      --muted:     #7a7870;
+      --danger:    #ff4a4a;
+
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+      --font-body:    'Instrument Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ─── noise overlay ───────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── nav ─────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(13,14,12,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .nav-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.2rem 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    /* ─── hero ────────────────────────────────────────── */
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5rem 3rem 5rem 5vw;
+      border-right: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 38ch;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    /* ─── waitlist form (inline) ──────────────────────── */
+    .waitlist-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 420px;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .field-wrap {
+      display: flex;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: border-color 0.2s;
+    }
+    .field-wrap:focus-within {
+      border-color: var(--accent);
+    }
+
+    .field-wrap input[type="email"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+    }
+    .field-wrap input::placeholder { color: var(--muted); }
+
+    .btn-join {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 0.85rem 1.4rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .btn-join:hover { background: #e8ff40; }
+    .btn-join:active { transform: scale(0.98); }
+
+    .form-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .success-msg {
+      display: none;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--accent);
+      background: rgba(212,240,42,0.05);
+    }
+
+    /* ─── hero right: scan animation ─────────────────── */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scan-ui {
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+    }
+
+    .scan-header {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.6rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .scan-header span { color: var(--accent); }
+
+    .scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scandown 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scandown {
+      0%   { top: 40px; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { top: calc(100% - 40px); opacity: 0; }
+    }
+
+    .listing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.5rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.8rem;
+      align-items: center;
+      animation: fadein 0.5s ease both;
+      position: relative;
+    }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .listing-card:nth-child(2) { animation-delay: 0.1s; }
+    .listing-card:nth-child(3) { animation-delay: 0.2s; }
+    .listing-card:nth-child(4) { animation-delay: 0.3s; }
+
+    .listing-card.hot {
+      border-color: rgba(212,240,42,0.4);
+    }
+    .listing-card.hot::after {
+      content: 'AFFARE';
+      position: absolute;
+      top: -8px; right: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 1px 6px;
+      font-weight: 500;
+    }
+
+    .card-icon {
+      width: 32px; height: 32px;
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .card-info { min-width: 0; }
+    .card-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-source {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+    .card-score {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .score-val {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .score-label {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ─── features ────────────────────────────────────── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feat {
+      padding: 3rem 2.5rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+    .feat:last-child { border-right: none; }
+    .feat:hover { background: var(--surface); }
+
+    .feat-num {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 2rem;
+    }
+
+    .feat-icon {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .feat h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .feat p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .feat-accent-line {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width 0.4s ease;
+    }
+    .feat:hover .feat-accent-line { width: 100%; }
+
+    /* ─── sources ─────────────────────────────────────── */
+    .sources {
+      padding: 3rem 5vw;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .sources-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .sources-list {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .source-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.8rem;
+      letter-spacing: 0.06em;
+      opacity: 0.6;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+    .source-pill:hover { opacity: 1; border-color: var(--accent); }
+
+    /* ─── bottom cta ──────────────────────────────────── */
+    .cta-section {
+      padding: 6rem 5vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .cta-section h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .cta-section h2 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .cta-right p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* ─── footer ──────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      opacity: 0.4;
+    }
+
+    .footer-note {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── counters ────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      flex: 1;
+      padding: 2rem;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat:last-child { border-right: none; }
+    .stat-val {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+    }
+    .stat-desc {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* ─── responsive ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .hero-left {
+        padding: 3rem 5vw;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-right { display: none; }
+      .features {
+        grid-template-columns: 1fr;
+      }
+      .feat { border-right: none; border-bottom: 1px solid var(--border); }
+      .cta-section {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .stats-bar { flex-wrap: wrap; }
+      .stat { flex-basis: 50%; }
+    }
+
+    @media (max-width: 500px) {
+      nav { padding: 1rem 1.2rem; }
+      .hero-left { padding: 2.5rem 1.2rem; }
+      .feat { padding: 2rem 1.2rem; }
+      .cta-section { padding: 3rem 1.2rem; }
+      .field-wrap { flex-direction: column; }
+      .btn-join { width: 100%; text-align: center; padding: 0.9rem; }
+      .sources { padding: 2rem 1.2rem; }
+      footer { padding: 1.5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      Lepefy
+    </div>
+    <div class="nav-badge">Beta · Lista d'attesa</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Deal scanner AI per mercati C2C italiani</div>
+      <h1>Trova le<br/><em>occasioni</em><br/>prima degli altri</h1>
+      <p class="hero-sub">
+        Lepefy analizza in tempo reale i principali marketplace italiani — Subito, eBay, Facebook Marketplace, Wallapop — e ti segnala i prezzi sottostimati appena compaiono.
+      </p>
+
+      <div class="waitlist-form" id="waitlist">
+        <div class="form-label">Entra in lista d'attesa — accesso anticipato gratuito</div>
+        <div class="field-wrap">
+          <input type="email" id="emailInput" placeholder="la.tua@email.it" autocomplete="email" />
+          <button class="btn-join" onclick="handleSubmit()">Entra →</button>
+        </div>
+        <div class="form-note">Niente spam. Ti avvisiamo solo quando sei pronto ad accedere.</div>
+        <div class="success-msg" id="successMsg">
+          ✓ Sei in lista. Ti avvisiamo presto.
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="scan-ui">
+        <div class="scan-header">
+          <span>Scansione in corso</span>
+          <span>4 sorgenti · aggiornato ora</span>
+        </div>
+        <div style="position:relative; overflow:hidden; padding: 4px 0;">
+          <div class="scan-line"></div>
+
+          <div class="listing-card hot">
+            <div class="card-icon">📷</div>
+            <div class="card-info">
+              <div class="card-name">Sony A7 III + 28-70mm</div>
+              <div class="card-source">subito.it · 3 min fa</div>
+            </div>
+            <div class="card-score">
+              <div class="score-val">−38%</div>
+              <div class="score-label">vs mercato</div>
+            </div>
+          </div>
+
+          <div class="listing-card">
+            <div class="card-icon">🎧</div>
+            <div class="card-info">
+              <div class="card-name">Sennheiser HD 650</div>
+              <div class="card-source">ebay.it · 11 min fa</div>
+            </div>
+            <div class="card-score">
+              <div class="score-val">−22%</div>
+              <div class="score-label">vs mercato</div>
+            </div>
+          </div>
+
+          <div class="listing-card hot">
+            <div class="card-icon">💻</div>
+            <div class="card-info">
+              <div class="card-name">MacBook Air M2 · 16GB</div>
+              <div class="card-source">facebook · 18 min fa</div>
+            </div>
+            <div class="card-score">
+              <div class="score-val">−31%</div>
+              <div class="score-label">vs mercato</div>
+            </div>
+          </div>
+
+          <div class="listing-card">
+            <div class="card-icon">📻</div>
+            <div class="card-info">
+              <div class="card-name">Cambridge Audio AXR100</div>
+              <div class="card-source">wallapop · 25 min fa</div>
+            </div>
+            <div class="card-score">
+              <div class="score-val">−19%</div>
+              <div class="score-label">vs mercato</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-val">4</div>
+      <div class="stat-desc">Marketplace monitorati</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">24/7</div>
+      <div class="stat-desc">Scansione continua</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">AI</div>
+      <div class="stat-desc">Valutazione del prezzo</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">∞</div>
+      <div class="stat-desc">Categorie configurabili</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feat">
+      <div class="feat-num">01</div>
+      <span class="feat-icon">🔍</span>
+      <h3>Scansione in tempo reale</h3>
+      <p>Lepefy monitora Subito.it, eBay Italia, Facebook Marketplace e Wallapop ogni pochi minuti. Nessun annuncio ti sfugge.</p>
+      <div class="feat-accent-line"></div>
+    </div>
+    <div class="feat">
+      <div class="feat-num">02</div>
+      <span class="feat-icon">🧠</span>
+      <h3>Valutazione AI del prezzo</h3>
+      <p>Il nostro modello analizza annunci simili e stima il valore di mercato reale. Ti mostra solo i prezzi realmente sottostimati, filtrando il rumore.</p>
+      <div class="feat-accent-line"></div>
+    </div>
+    <div class="feat">
+      <div class="feat-num">03</div>
+      <span class="feat-icon">🔔</span>
+      <h3>Alert istantanei</h3>
+      <p>Configura le tue categorie e ricevi una notifica appena compare un'occasione. Arriva sempre prima dei competitor.</p>
+      <div class="feat-accent-line"></div>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <div class="sources">
+    <div class="sources-label">Fonti monitorate</div>
+    <div class="sources-list">
+      <div class="source-pill">Subito.it</div>
+      <div class="source-pill">eBay Italia</div>
+      <div class="source-pill">Facebook Marketplace</div>
+      <div class="source-pill">Wallapop</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <section class="cta-section">
+    <div>
+      <h2>Smetti di<br/><em>guardare</em><br/>partire le offerte.</h2>
+    </div>
+    <div class="cta-right">
+      <p>
+        I migliori annunci spariscono in pochi minuti. Lepefy ti avvisa per primo — così puoi comprare basso, rivendere alto, e costruire il tuo flusso.
+      </p>
+      <div class="waitlist-form">
+        <div class="form-label">Accesso anticipato · Gratis</div>
+        <div class="field-wrap">
+          <input type="email" id="emailInput2" placeholder="la.tua@email.it" autocomplete="email" />
+          <button class="btn-join" onclick="handleSubmit2()">Entra →</button>
+        </div>
+        <div class="form-note">Niente spam. Solo il tuo link di accesso.</div>
+        <div class="success-msg" id="successMsg2">
+          ✓ Sei in lista. Ti avvisiamo presto.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Lepefy</div>
+    <div class="footer-note">© 2025 Lepefy · Made in Italy</div>
+  </footer>
+
+  <script>
+    function handleSubmit() {
+      const input = document.getElementById('emailInput');
+      const msg   = document.getElementById('successMsg');
+      if (!input.value || !input.value.includes('@')) {
+        input.style.outline = '2px solid #ff4a4a';
+        setTimeout(() => input.style.outline = '', 1500);
+        return;
+      }
+      input.closest('.field-wrap').style.display = 'none';
+      msg.style.display = 'block';
+      // 👉 qui aggiungi la tua logica: fetch a Supabase, Mailchimp, ecc.
+      console.log('Email iscritta:', input.value);
+    }
+
+    function handleSubmit2() {
+      const input = document.getElementById('emailInput2');
+      const msg   = document.getElementById('successMsg2');
+      if (!input.value || !input.value.includes('@')) {
+        input.style.outline = '2px solid #ff4a4a';
+        setTimeout(() => input.style.outline = '', 1500);
+        return;
+      }
+      input.closest('.field-wrap').style.display = 'none';
+      msg.style.display = 'block';
+      console.log('Email iscritta:', input.value);
+    }
+  </script>
+
+</body>
+</html>
