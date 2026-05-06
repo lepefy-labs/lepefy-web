@@ -227,7 +227,6 @@
       gap: 8px;
       font-family: var(--font-mono);
       font-size: 0.82rem;
-      color: var(--accent);
       padding: 0.75rem 1rem;
       background: var(--accent-light);
       border: 1px solid rgba(255,77,0,0.2);
@@ -235,7 +234,7 @@
       margin-top: 0.5rem;
     }
 
-    /* ─── MOCKUP CARD ─────────────────────────────────── */
+    /* ─── MOCKUP ──────────────────────────────────────── */
     .mockup {
       background: var(--bg-2);
       border: 1px solid var(--border);
@@ -633,7 +632,7 @@
           <button class="btn-cta" onclick="handleSubmit()">Entra →</button>
         </div>
         <div class="form-note">Niente spam. Solo il tuo link di accesso quando sei pronto.</div>
-        <div class="success-msg" id="successMsg">✓ Sei in lista — ti avvisiamo presto.</div>
+        <div class="success-msg" id="successMsg"></div>
       </div>
     </div>
 
@@ -758,7 +757,7 @@
         <button class="btn-cta-dark" onclick="handleSubmit2()">Entra →</button>
       </div>
       <div class="cta-note">Accesso anticipato gratuito · Niente spam</div>
-      <div class="success-cta" id="successMsg2">✓ Sei in lista. Ti avvisiamo presto.</div>
+      <div class="success-cta" id="successMsg2"></div>
     </div>
   </section>
 
@@ -769,55 +768,49 @@
   </footer>
 
   <script>
-  const SUPABASE_URL = 'https://osonphsavryefwmlhkyv.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zb25waHNhdnJ5ZWZ3bWxoa3l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDc4MDQsImV4cCI6MjA5MzMyMzgwNH0.Jfv_RcDw7uyhsVIP2zEZ2P210sE6o-44MJXunNOgfrk';
+    const SUPABASE_URL = 'https://osonphsavryefwmlhkyv.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zb25waHNhdnJ5ZWZ3bWxoa3l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDc4MDQsImV4cCI6MjA5MzMyMzgwNH0.Jfv_RcDw7uyhsVIP2zEZ2P210sE6o-44MJXunNOgfrk';
 
-  async function saveEmail(email) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ email })
-    });
-    return res.ok || res.status === 409; // 409 = email già esistente
-  }
-
-  async function handleSubmit() {
-    const input = document.getElementById('emailInput');
-    const msg   = document.getElementById('successMsg');
-    const row   = document.getElementById('fieldRow1');
-    if (!input.value || !input.value.includes('@')) {
-      row.style.borderColor = '#FF4D00';
-      setTimeout(() => row.style.borderColor = '', 1500);
-      return;
+    async function saveEmail(email) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email })
+      });
+      if (res.ok) return 'new';
+      if (res.status === 409) return 'duplicate';
+      return 'error';
     }
-    const ok = await saveEmail(input.value);
-    if (ok) {
+
+    async function handleForm(inputId, rowId, msgId, isLight) {
+      const input = document.getElementById(inputId);
+      const row   = document.getElementById(rowId);
+      const msg   = document.getElementById(msgId);
+
+      if (!input.value || !input.value.includes('@')) {
+        row.style.borderColor = '#FF4D00';
+        setTimeout(() => row.style.borderColor = '', 1500);
+        return;
+      }
+
+      const result = await saveEmail(input.value);
       row.style.display = 'none';
-      msg.style.display = 'flex';
-    }
-  }
+      msg.style.display = isLight ? 'flex' : 'block';
+      msg.style.color = result === 'error' ? '#FF4D00' : 'var(--accent)';
 
-  async function handleSubmit2() {
-    const input = document.getElementById('emailInput2');
-    const msg   = document.getElementById('successMsg2');
-    const form  = document.getElementById('ctaForm');
-    if (!input.value || !input.value.includes('@')) {
-      form.style.borderColor = 'rgba(255,77,0,0.8)';
-      setTimeout(() => form.style.borderColor = '', 1500);
-      return;
+      if (result === 'new')       msg.textContent = '✓ Sei in lista — ti avvisiamo presto.';
+      else if (result === 'duplicate') msg.textContent = '👋 Sei già in lista — ti avvisiamo presto!';
+      else                        msg.textContent = '⚠️ Qualcosa è andato storto, riprova.';
     }
-    const ok = await saveEmail(input.value);
-    if (ok) {
-      form.style.display = 'none';
-      msg.style.display = 'block';
-    }
-  }
-</script>
+
+    function handleSubmit()  { handleForm('emailInput',  'fieldRow1', 'successMsg',  true);  }
+    function handleSubmit2() { handleForm('emailInput2', 'ctaForm',   'successMsg2', false); }
+  </script>
 
 </body>
 </html>
