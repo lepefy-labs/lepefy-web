@@ -48,12 +48,10 @@ function DealCard({ deal }: { deal: Deal }) {
           alt={deal.title}
           onError={() => setImgError(true)}
         />
-      ) : (
-        <div className="deal-img-placeholder">
-          <div style={{ opacity: 0.4, color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LogoSvg height={64} />
-          </div>
-        </div>
+       ) : (
+            <div className="img-placeholder">
+              <img src="/card-placeholder.svg" alt="" />
+            </div>
       )}
 
       <div className="deal-body">
