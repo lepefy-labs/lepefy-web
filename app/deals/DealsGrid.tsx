@@ -50,8 +50,8 @@ function DealCard({ deal }: { deal: Deal }) {
         />
       ) : (
         <div className="deal-img-placeholder">
-          <div style={{ opacity: 0.15, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LogoSvg height={48} />
+          <div style={{ opacity: 0.4, color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LogoSvg height={64} />
           </div>
         </div>
       )}
@@ -132,6 +132,11 @@ export default function DealsGrid({ initialDeals }: { initialDeals: Deal[] }) {
 
   return (
     <>
+      <p style={{ fontSize: '0.9rem', color: 'var(--text-2)' }}>
+        {initialDeals.length} occasioni selezionate dall&apos;AI
+        {fetchedAt ? ` · aggiornato alle ${fetchedAt}` : ''}
+      </p>
+
       <div className="filters-row">
         {SOURCES.map((s) => (
           <button
