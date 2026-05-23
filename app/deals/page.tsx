@@ -8,7 +8,7 @@ export const revalidate = 900;
 
 export const metadata: Metadata = {
   title: 'Lepefy — Deal del giorno',
-  description: 'I migliori affari su Subito.it e Vinted selezionati dall\'AI. Prezzi sottostimati aggiornati ogni 15 minuti.',
+  description: "I migliori affari su Subito.it e Vinted selezionati dall'AI. Prezzi sottostimati aggiornati ogni 15 minuti.",
 };
 
 export default async function DealsPage() {

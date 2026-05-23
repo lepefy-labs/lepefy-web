@@ -68,7 +68,7 @@ function DealCard({ deal }: { deal: Deal }) {
 
         <div className="deal-price-row">
           <span className="deal-price">€{deal.price_value.toLocaleString('it-IT')}</span>
-          <span className="deal-margin">+{deal.margine_stimato}% margine</span>
+          <span className="deal-margin">~€{deal.margine_stimato} di margine</span>
         </div>
 
         {deal.motivazione && (

@@ -5,7 +5,7 @@ const LOGO_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' v
 
 export const metadata: Metadata = {
   title: 'Lepefy — Trova le occasioni prima degli altri',
-  description: 'Lepefy scansiona Subito.it e Vinted in tempo reale. L\'AI analizza ogni annuncio e segnala solo i prezzi davvero sottostimati.',
+  description: "Lepefy scansiona Subito.it e Vinted in tempo reale. L'AI analizza ogni annuncio e segnala solo i prezzi davvero sottostimati.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -35,7 +35,6 @@ body {
   min-height: 100vh;
 }
 
-/* ─── NAV ─────────────────────────────────────────── */
 nav {
   display: flex;
   align-items: center;
@@ -91,7 +90,6 @@ nav {
 }
 .nav-link.accent:hover { background: #ffe4d6; }
 
-/* ─── HERO ────────────────────────────────────────── */
 .hero {
   max-width: 1100px;
   margin: 0 auto;
@@ -158,7 +156,6 @@ h1 .highlight::after {
   margin-bottom: 2.5rem;
 }
 
-/* ─── HERO CTA BUTTONS ────────────────────────────── */
 .hero-cta-row {
   display: flex;
   gap: 0.75rem;
@@ -202,7 +199,6 @@ h1 .highlight::after {
 }
 .btn-secondary:hover { border-color: var(--accent); background: var(--accent-light); }
 
-/* ─── FORM ────────────────────────────────────────── */
 .waitlist-form { max-width: 420px; }
 
 .form-label {
@@ -290,9 +286,7 @@ h1 .highlight::after {
 .extra-fields select { cursor: pointer; }
 .extra-fields select option { color: var(--text); }
 .extra-fields select.error,
-.extra-fields input.error {
-  border-color: var(--accent);
-}
+.extra-fields input.error { border-color: var(--accent); }
 
 .form-note {
   font-size: 0.78rem;
@@ -314,7 +308,6 @@ h1 .highlight::after {
   color: var(--accent);
 }
 
-/* ─── MOCKUP ──────────────────────────────────────── */
 .mockup {
   background: var(--bg-2);
   border: 1px solid var(--border);
@@ -431,7 +424,6 @@ h1 .highlight::after {
   display: inline-block;
 }
 
-/* ─── SOURCES ─────────────────────────────────────── */
 .sources-section {
   background: var(--bg-2);
   border-top: 1px solid var(--border);
@@ -463,10 +455,8 @@ h1 .highlight::after {
   border: 1px solid var(--border-dark);
   padding: 0.35rem 0.85rem;
   border-radius: 100px;
-  transition: border-color 0.2s, color 0.2s;
 }
 
-/* ─── FEATURES ────────────────────────────────────── */
 .features-section {
   max-width: 1100px;
   margin: 0 auto;
@@ -531,7 +521,6 @@ h1 .highlight::after {
   line-height: 1.7;
 }
 
-/* ─── STATS ───────────────────────────────────────── */
 .stats-section {
   max-width: 1100px;
   margin: 0 auto;
@@ -564,7 +553,6 @@ h1 .highlight::after {
   text-transform: uppercase;
 }
 
-/* ─── BOTTOM CTA ──────────────────────────────────── */
 .cta-section {
   background: var(--text);
   color: white;
@@ -581,10 +569,7 @@ h1 .highlight::after {
   margin-bottom: 1rem;
   color: white;
 }
-.cta-section h2 em {
-  font-style: normal;
-  color: var(--accent);
-}
+.cta-section h2 em { font-style: normal; color: var(--accent); }
 .cta-section p {
   color: rgba(255,255,255,0.5);
   font-size: 1rem;
@@ -633,7 +618,6 @@ h1 .highlight::after {
 
 .cta-note { font-size: 0.75rem; color: rgba(255,255,255,0.3); margin-top: 1rem; }
 
-/* ─── CTA DARK BUTTONS (chi-siamo bottom section) ─── */
 .cta-btn-row {
   display: flex;
   justify-content: center;
@@ -675,7 +659,6 @@ h1 .highlight::after {
 }
 .btn-cta-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.06); }
 
-/* ─── FOOTER ──────────────────────────────────────── */
 footer {
   border-top: 1px solid var(--border);
   padding: 1.5rem 2rem;
@@ -713,10 +696,7 @@ footer {
   margin-bottom: 0.4rem;
 }
 
-.page-header p {
-  font-size: 0.9rem;
-  color: var(--text-2);
-}
+.page-header p { font-size: 0.9rem; color: var(--text-2); }
 
 .filters-row {
   display: flex;
@@ -739,11 +719,7 @@ footer {
   letter-spacing: 0.03em;
 }
 .filter-pill:hover { border-color: var(--accent); color: var(--accent); }
-.filter-pill.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
+.filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
 
 .keyword-select {
   font-family: var(--font-mono);
@@ -782,10 +758,7 @@ footer {
   display: flex;
   flex-direction: column;
 }
-.deal-card:hover {
-  border-color: var(--border-dark);
-  box-shadow: var(--shadow-sm);
-}
+.deal-card:hover { border-color: var(--border-dark); box-shadow: var(--shadow-sm); }
 
 .deal-img {
   width: 100%;
@@ -803,12 +776,7 @@ footer {
   align-items: center;
   justify-content: center;
 }
-
-.deal-img-placeholder svg {
-  width: 40px;
-  height: 40px;
-  opacity: 0.3;
-}
+.deal-img-placeholder svg { width: 40px; height: 40px; opacity: 0.3; }
 
 .deal-body {
   padding: 1rem;
@@ -857,12 +825,7 @@ footer {
   flex-wrap: wrap;
 }
 
-.deal-price {
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text);
-}
+.deal-price { font-family: var(--font-mono); font-size: 1rem; font-weight: 500; color: var(--text); }
 
 .deal-margin {
   font-family: var(--font-mono);
@@ -938,7 +901,6 @@ footer {
   font-size: 0.85rem;
 }
 
-/* ─── DEALS CTA SIDEBAR ───────────────────────────── */
 .cta-sidebar {
   position: sticky;
   top: 80px;
@@ -950,19 +912,8 @@ footer {
   flex-direction: column;
   gap: 1rem;
 }
-
-.cta-sidebar h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-}
-
-.cta-sidebar p {
-  font-size: 0.82rem;
-  color: var(--text-2);
-  line-height: 1.6;
-}
+.cta-sidebar h3 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+.cta-sidebar p { font-size: 0.82rem; color: var(--text-2); line-height: 1.6; }
 
 .cta-sidebar-btn {
   display: block;
@@ -987,13 +938,10 @@ footer {
   letter-spacing: 0.03em;
 }
 
-/* ─── DEALS MOBILE STICKY ─────────────────────────── */
 .cta-mobile-sticky {
   display: none;
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   background: var(--bg-2);
   border-top: 1px solid var(--border);
   padding: 0.85rem 1.25rem;
@@ -1002,18 +950,8 @@ footer {
   justify-content: space-between;
   gap: 1rem;
 }
-.cta-mobile-sticky p {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.3;
-}
-.cta-mobile-sticky p span {
-  font-size: 0.72rem;
-  font-weight: 400;
-  color: var(--text-2);
-  display: block;
-}
+.cta-mobile-sticky p { font-size: 0.82rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+.cta-mobile-sticky p span { font-size: 0.72rem; font-weight: 400; color: var(--text-2); display: block; }
 .cta-mobile-sticky a {
   background: var(--accent);
   color: white;
@@ -1033,12 +971,7 @@ footer {
 body.deals-page { padding-bottom: 72px; }
 
 /* ─── ABBONATI PAGE ───────────────────────────────── */
-.sub-page {
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 3rem 2rem 5rem;
-  flex: 1;
-}
+.sub-page { max-width: 520px; margin: 0 auto; padding: 3rem 2rem 5rem; flex: 1; }
 
 .sub-back {
   font-family: var(--font-mono);
@@ -1053,32 +986,11 @@ body.deals-page { padding-bottom: 72px; }
 }
 .sub-back:hover { color: var(--text); }
 
-.sub-title {
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  margin-bottom: 0.6rem;
-}
+.sub-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 0.6rem; }
+.sub-sub { font-size: 0.95rem; color: var(--text-2); line-height: 1.65; margin-bottom: 2.5rem; }
 
-.sub-sub {
-  font-size: 0.95rem;
-  color: var(--text-2);
-  line-height: 1.65;
-  margin-bottom: 2.5rem;
-}
-
-.sub-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.sub-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
+.sub-form { display: flex; flex-direction: column; gap: 1rem; }
+.sub-field { display: flex; flex-direction: column; gap: 0.4rem; }
 
 .sub-field label {
   font-family: var(--font-mono);
@@ -1104,21 +1016,13 @@ body.deals-page { padding-bottom: 72px; }
   box-shadow: var(--shadow-sm);
 }
 .sub-field input:focus,
-.sub-field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(255,77,0,0.1);
-}
+.sub-field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,77,0,0.1); }
 .sub-field input.error,
-.sub-field select.error {
-  border-color: var(--accent);
-}
+.sub-field select.error { border-color: var(--accent); }
 .sub-field select { cursor: pointer; color: var(--text-2); }
 .sub-field select option { color: var(--text); }
 
-.sub-field-note {
-  font-size: 0.75rem;
-  color: var(--text-3);
-}
+.sub-field-note { font-size: 0.75rem; color: var(--text-3); }
 
 .sub-btn {
   background: var(--accent);
@@ -1137,53 +1041,15 @@ body.deals-page { padding-bottom: 72px; }
 .sub-btn:active { transform: scale(0.98); }
 .sub-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
 
-.sub-notice {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  line-height: 1.5;
-}
-.notice-info {
-  background: var(--accent-light);
-  border: 1px solid rgba(255,77,0,0.2);
-  color: var(--accent);
-}
-.notice-error {
-  background: #FFF1F1;
-  border: 1px solid rgba(255,0,0,0.15);
-  color: #CC0000;
-}
+.sub-notice { font-family: var(--font-mono); font-size: 0.78rem; padding: 0.75rem 1rem; border-radius: var(--radius); line-height: 1.5; }
+.notice-info { background: var(--accent-light); border: 1px solid rgba(255,77,0,0.2); color: var(--accent); }
+.notice-error { background: #FFF1F1; border: 1px solid rgba(255,0,0,0.15); color: #CC0000; }
 
-.success-block {
-  text-align: center;
-  padding: 2rem;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-.success-block .success-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-.success-block h2 {
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.5rem;
-}
-.success-block p {
-  font-size: 0.9rem;
-  color: var(--text-2);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-}
-.success-block a {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--accent);
-  text-decoration: none;
-}
+.success-block { text-align: center; padding: 2rem; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); }
+.success-block .success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.success-block h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+.success-block p { font-size: 0.9rem; color: var(--text-2); margin-bottom: 1.5rem; line-height: 1.6; }
+.success-block a { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); text-decoration: none; }
 .success-block a:hover { text-decoration: underline; }
 
 /* ─── RESPONSIVE ──────────────────────────────────── */
