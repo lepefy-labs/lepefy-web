@@ -3,17 +3,11 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import type { Deal } from '../../lib/supabase';
+import LogoSvg from '../_components/LogoSvg';
 
 const PIN_SVG = (
   <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M8 1.5C5.515 1.5 3.5 3.515 3.5 6c0 3.75 4.5 8.5 4.5 8.5S12.5 9.75 12.5 6c0-2.485-2.015-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="currentColor" />
-  </svg>
-);
-
-const CAMERA_SVG = (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="12" cy="13" r="4" stroke="currentColor" strokeWidth="1.5" />
   </svg>
 );
 
@@ -55,7 +49,11 @@ function DealCard({ deal }: { deal: Deal }) {
           onError={() => setImgError(true)}
         />
       ) : (
-        <div className="deal-img-placeholder">{CAMERA_SVG}</div>
+        <div className="deal-img-placeholder">
+          <div style={{ opacity: 0.15, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LogoSvg height={48} />
+          </div>
+        </div>
       )}
 
       <div className="deal-body">
@@ -97,12 +95,14 @@ function DealCard({ deal }: { deal: Deal }) {
 const SOURCES = ['Tutti', 'Subito.it', 'Vinted.it'] as const;
 type SourceFilter = (typeof SOURCES)[number];
 
-export default function DealsGrid({ initialDeals }: { initialDeals: Deal[]; fetchedAt: string }) {
+export default function DealsGrid({ initialDeals }: { initialDeals: Deal[] }) {
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>('Tutti');
   const [keyword, setKeyword] = useState('');
   const [showSticky, setShowSticky] = useState(false);
+  const [fetchedAt, setFetchedAt] = useState('');
 
   useEffect(() => {
+    setFetchedAt(new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }));
     document.body.classList.add('deals-page');
     const onScroll = () => setShowSticky(window.scrollY > 300);
     window.addEventListener('scroll', onScroll, { passive: true });

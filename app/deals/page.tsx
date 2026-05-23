@@ -21,8 +21,6 @@ export default async function DealsPage() {
     fetchError = true;
   }
 
-  const fetchedAt = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-
   return (
     <>
       <nav>
@@ -41,11 +39,11 @@ export default async function DealsPage() {
           <p>
             {fetchError
               ? 'Errore nel caricamento — riprova tra poco.'
-              : `${deals.length} occasioni selezionate dall'AI · aggiornato alle ${fetchedAt}`}
+              : `${deals.length} occasioni selezionate dall'AI`}
           </p>
         </div>
 
-        <DealsGrid initialDeals={deals} fetchedAt={fetchedAt} />
+        <DealsGrid initialDeals={deals} />
       </div>
 
       <footer>
