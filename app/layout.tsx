@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
+const LOGO_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M 4 4 L 4 44 L 44 44' stroke='%231E1B4B' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M 4 32 A 12 12 0 0 1 16 44' stroke='%236366F1' stroke-width='1.5' fill='none'/%3E%3Cpath d='M 4 22 A 22 22 0 0 1 26 44' stroke='%236366F1' stroke-width='1.5' fill='none' opacity='0.55'/%3E%3Cpath d='M 4 12 A 32 32 0 0 1 36 44' stroke='%236366F1' stroke-width='1.5' fill='none' opacity='0.25'/%3E%3C/svg%3E`;
+
 export const metadata: Metadata = {
   title: 'Lepefy — Trova le occasioni prima degli altri',
-  description: 'Lepefy scansiona Subito.it e Vinted.it in tempo reale. L\'AI analizza ogni annuncio e ti segnala solo i prezzi davvero sottostimati.',
+  description: 'Lepefy scansiona Subito.it e Vinted in tempo reale. L\'AI analizza ogni annuncio e segnala solo i prezzi davvero sottostimati.',
 };
-
-const LOGO_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M 4 4 L 4 44 L 44 44' stroke='%231E1B4B' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M 4 32 A 12 12 0 0 1 16 44' stroke='%236366F1' stroke-width='1.5' fill='none'/%3E%3Cpath d='M 4 22 A 22 22 0 0 1 26 44' stroke='%236366F1' stroke-width='1.5' fill='none' opacity='0.55'/%3E%3Cpath d='M 4 12 A 32 32 0 0 1 36 44' stroke='%236366F1' stroke-width='1.5' fill='none' opacity='0.25'/%3E%3C/svg%3E`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

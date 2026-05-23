@@ -24,19 +24,18 @@ export const supabaseHeaders = {
 
 export async function fetchPublicDeals(): Promise<Deal[]> {
   const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
-
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/scan_results` +
-      `?select=id,title,price_value,score,margine_stimato,motivazione,keyword,location,url,source,image_url,condition,created_at` +
-      `&score=gte.7&margine_stimato=gte.15&created_at=lte.${encodeURIComponent(twelveHoursAgo)}&limit=20`,
-    {
-      headers: supabaseHeaders,
-      next: { revalidate: 900 },
-    }
-  );
-
+  const params = new URLSearchParams({
+    select: 'id,title,price_value,score,margine_stimato,motivazione,keyword,location,url,source,image_url,condition,created_at',
+    'score': 'gte.7',
+    'margine_stimato': 'gte.15',
+    'created_at': `lte.${twelveHoursAgo}`,
+    'limit': '20',
+  });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/scan_results?${params}`, {
+    headers: supabaseHeaders,
+    next: { revalidate: 900 },
+  });
   if (!res.ok) throw new Error(`Supabase error: ${res.status}`);
-
   const data: Deal[] = await res.json();
   return data.sort((a, b) => b.score * b.margine_stimato - a.score * a.margine_stimato);
 }
