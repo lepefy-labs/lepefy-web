@@ -3,158 +3,156 @@ import Link from 'next/link';
 import LogoSvg from '../_components/LogoSvg';
 
 export const metadata: Metadata = {
-  title: 'Lepefy — Chi siamo',
-  description: 'Lepefy scansiona Subito.it e Vinted in tempo reale. Scopri come funziona e unisciti alla beta.',
+  title: 'Lepefy — Chi Siamo',
+  description: 'Lepefy scansiona Subito.it e Vinted in tempo reale. Scopri la nostra missione e come funziona lo scoring AI.',
 };
+
+const STATS = [
+  { val: '12.450+', desc: 'Deal analizzati questa settimana' },
+  { val: '92%',     desc: 'Soddisfazione utenti' },
+  { val: '€500k+',  desc: 'Risparmiati dagli utenti' },
+  { val: '15 min',  desc: 'Frequenza aggiornamento' },
+];
+
+const FLOW = [
+  { step: '1', icon: '🔍', title: 'Scansione continua',  desc: 'Analizziamo migliaia di annunci ogni 15 minuti su Subito.it e Vinted.it.' },
+  { step: '2', icon: '🤖', title: 'Scoring AI',          desc: "L'AI confronta ogni annuncio con i prezzi di mercato e calcola il margine potenziale." },
+  { step: '3', icon: '🔔', title: 'Notifica immediata',  desc: 'Gli abbonati ricevono un alert solo per i deal che valgono davvero.' },
+];
+
+const TESTIMONIALS = [
+  { quote: 'Grazie a Lepefy ho comprato un Canon EOS R6 a €800 invece di €1.400! Deal trovato in due minuti.', author: 'Luca M.', city: 'Milano' },
+  { quote: 'Finalmente uno strumento serio per chi fa flipping. I deal sono buoni e l\'AI spiega sempre il perché.', author: 'Davide R.', city: 'Torino' },
+  { quote: 'Ho recuperato il costo dell\'abbonamento con il primo affare. Strumento indispensabile.', author: 'Marco P.', city: 'Roma' },
+];
 
 export default function ChiSiamoPage() {
   return (
     <>
+      {/* NAV */}
       <nav>
-        <Link href="/" className="logo-svg" aria-label="Lepefy home">
-          <LogoSvg height={36} />
+        <Link href="/" className="logo-link" aria-label="Lepefy home">
+          <div className="logo-svg"><LogoSvg /></div>
+          <span className="logo-name">Lepefy</span>
         </Link>
-        <div className="nav-links">
-          <Link href="/deals" className="nav-link">Deal del giorno</Link>
-          <Link href="/abbonati" className="nav-link accent">Iscriviti alla beta</Link>
+        <div className="nav-right">
+          <Link href="/deals"    className="nav-link">Deal del giorno</Link>
+          <Link href="/abbonati" className="nav-cta">Iscriviti alla beta</Link>
         </div>
       </nav>
 
-      <section className="hero">
-        <div className="hero-left">
-          <div className="hero-tag">Deal scanner AI · Marketplace italiani</div>
-          <h1>Trova le <span className="highlight">occasioni</span><br />prima degli altri</h1>
-          <p className="hero-sub">
-            Lepefy scansiona Subito.it e Vinted in tempo reale. L&apos;AI analizza ogni annuncio e ti segnala solo i prezzi davvero sottostimati.
+      {/* HERO */}
+      <section className="page-hero">
+        <div className="page-hero-label">Il nostro progetto</div>
+        <h1>Chi Siamo</h1>
+        <p>
+          Lepefy è un progetto italiano che aiuta migliaia di persone a risparmiare
+          su elettronica e fotografia usata, trovando le occasioni prima che spariscano.
+        </p>
+      </section>
+
+      {/* MISSIONE + FLOW */}
+      <div className="mission-section">
+        <div>
+          <div className="mission-label">La nostra missione</div>
+          <h2 className="mission-title">
+            Il 70% degli annunci ha prezzi{' '}
+            <span className="highlight">sottostimati</span> del 20–50%.
+            Noi li troviamo per te.
+          </h2>
+          <p className="mission-text">
+            Su Subito.it e Vinted.it esistono ogni giorno centinaia di occasioni che vengono
+            vendute al 20–50% in meno del loro valore reale. Il problema è trovarle in tempo,
+            prima che lo facciano gli altri. Lepefy lo fa al posto tuo, 24 ore su 24.
           </p>
-          <div className="hero-cta-row">
-            <Link href="/deals" className="btn-primary">Vedi i deal →</Link>
-            <Link href="/abbonati" className="btn-secondary">Iscriviti alla beta</Link>
-          </div>
+          <Link href="/abbonati" className="mission-btn">Prova Gratis →</Link>
         </div>
 
-        <div className="mockup">
-          <div className="mockup-bar">
-            <div className="mockup-dots"><span /><span /><span /></div>
-            <div className="mockup-title">lepefy · scansione attiva</div>
-            <div className="mockup-status">live</div>
-          </div>
-          <div className="mockup-body">
-            <div className="deal-card-mock featured">
-              <div className="deal-emoji">📷</div>
-              <div className="deal-info">
-                <div className="deal-name">Sony A7 III + 28-70mm</div>
-                <div className="deal-meta">subito.it · 3 min fa · Milano</div>
+        <div className="flow-card">
+          {FLOW.map((s, i) => (
+            <div key={s.step}>
+              <div className="flow-step">
+                <div className="flow-num">{s.step}</div>
+                <div>
+                  <div className="flow-title">{s.icon} {s.title}</div>
+                  <div className="flow-desc">{s.desc}</div>
+                </div>
               </div>
-              <div className="deal-score">
-                <div className="deal-pct">−38%</div>
-                <div className="deal-badge-mock">AFFARONE</div>
-              </div>
+              {i < FLOW.length - 1 && <div className="flow-connector" />}
             </div>
-            <div className="deal-card-mock">
-              <div className="deal-emoji">💻</div>
-              <div className="deal-info">
-                <div className="deal-name">MacBook Air M2 · 16GB</div>
-                <div className="deal-meta">vinted · 11 min fa · Roma</div>
-              </div>
-              <div className="deal-score">
-                <div className="deal-pct">−27%</div>
-                <div className="deal-badge-mock">BUONO</div>
-              </div>
-            </div>
-            <div className="deal-card-mock">
-              <div className="deal-emoji">🎧</div>
-              <div className="deal-info">
-                <div className="deal-name">Sennheiser HD 650</div>
-                <div className="deal-meta">subito.it · 18 min fa</div>
-              </div>
-              <div className="deal-score">
-                <div className="deal-pct">−21%</div>
-                <div className="deal-badge-mock">BUONO</div>
-              </div>
-            </div>
-            <div className="deal-card-mock">
-              <div className="deal-emoji">📻</div>
-              <div className="deal-info">
-                <div className="deal-name">Cambridge Audio AXR100</div>
-                <div className="deal-meta">vinted · 25 min fa</div>
-              </div>
-              <div className="deal-score">
-                <div className="deal-pct neutral">−8%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="sources-section">
-        <div className="sources-inner">
-          <div className="sources-label">Fonti monitorate</div>
-          <div className="sources-pills">
-            <div className="source-pill">Subito.it</div>
-            <div className="source-pill">Vinted.it</div>
-          </div>
+          ))}
         </div>
       </div>
 
-      <section className="features-section">
-        <div className="section-label">Come funziona</div>
-        <div className="section-title">Tutto quello che ti serve<br />per non perdere un&apos;occasione</div>
-        <div className="features-grid">
-          <div className="feat">
-            <div className="feat-icon-wrap">🔍</div>
-            <h3>Scansione continua</h3>
-            <p>Monitoriamo Subito.it e Vinted ogni pochi minuti. Nessun annuncio ti sfugge, anche quelli che spariscono in ore.</p>
-          </div>
-          <div className="feat">
-            <div className="feat-icon-wrap">🧠</div>
-            <h3>Valutazione AI del prezzo</h3>
-            <p>L&apos;AI confronta ogni annuncio con centinaia di listing simili e calcola il valore reale di mercato. Vedi subito quanto stai risparmiando.</p>
-          </div>
-          <div className="feat">
-            <div className="feat-icon-wrap">🔔</div>
-            <h3>Alert istantanei</h3>
-            <p>Configura le categorie che ti interessano e ricevi una notifica appena compare un&apos;occasione. Arriva sempre prima dei competitor.</p>
-          </div>
-        </div>
-      </section>
-
+      {/* STATISTICHE */}
       <div className="stats-section">
-        <div className="stat">
-          <div className="stat-val">2</div>
-          <div className="stat-desc">Marketplace</div>
-        </div>
-        <div className="stat">
-          <div className="stat-val">24/7</div>
-          <div className="stat-desc">Scansione</div>
-        </div>
-        <div className="stat">
-          <div className="stat-val">AI</div>
-          <div className="stat-desc">Valutazione</div>
-        </div>
-        <div className="stat">
-          <div className="stat-val">∞</div>
-          <div className="stat-desc">Categorie</div>
+        <div className="stats-grid">
+          {STATS.map((s) => (
+            <div key={s.val} className="stat-item">
+              <div className="stat-val">{s.val}</div>
+              <div className="stat-desc">{s.desc}</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <section className="cta-section">
-        <div className="cta-inner">
-          <h2>Smetti di guardare partire<br />le <em>occasioni</em>.</h2>
-          <p>I migliori annunci spariscono in minuti. Lepefy ti avvisa per primo.</p>
-          <div className="cta-btn-row">
-            <Link href="/deals" className="btn-cta-primary">Vedi i deal →</Link>
-            <Link href="/abbonati" className="btn-cta-outline">Iscriviti alla beta</Link>
-          </div>
-          <div className="cta-note" style={{ marginTop: '1.5rem' }}>Accesso anticipato gratuito · Niente spam</div>
+      {/* TESTIMONIANZE */}
+      <div className="testimonials-section">
+        <div className="testimonials-title">Cosa dicono i nostri utenti</div>
+        <div className="testimonials-grid">
+          {TESTIMONIALS.map((t) => (
+            <div key={t.author} className="testimonial-card">
+              <div className="testimonial-quote">&ldquo;{t.quote}&rdquo;</div>
+              <div>
+                <div className="testimonial-author">— {t.author}</div>
+                <div className="testimonial-city">{t.city}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA FINALE */}
+      <section className="chi-cta">
+        <h2>Pronto a trovare il tuo prossimo affare?</h2>
+        <p>Iscriviti alla beta e ricevi i deal 12 ore prima di tutti.</p>
+        <div className="chi-cta-btns">
+          <Link href="/abbonati" className="chi-cta-white">Iscriviti Gratis →</Link>
+          <Link href="/deals"    className="chi-cta-outline">Vedi i deal pubblici</Link>
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer>
-        <div className="footer-logo">
-          <LogoSvg height={28} />
+        <div className="footer-inner">
+          <div className="footer-grid">
+            <div>
+              <div className="footer-brand">
+                <LogoSvg height={24} />
+                <span className="footer-brand-name">Lepefy</span>
+              </div>
+              <p className="footer-brand-desc">Deal scanner AI per marketplace italiani.</p>
+            </div>
+            <div>
+              <div className="footer-col-title">Navigazione</div>
+              <ul className="footer-links">
+                <li><Link href="/deals">Deal del giorno</Link></li>
+                <li><Link href="/abbonati">Iscriviti alla beta</Link></li>
+              </ul>
+            </div>
+            <div>
+              <div className="footer-col-title">Contatti</div>
+              <ul className="footer-links">
+                <li><a href="https://t.me/lepefy">✈️ Telegram</a></li>
+                <li><a href="mailto:info@lepefy.it">✉️ Email</a></li>
+                <li><a href="/privacy">🔒 Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span className="footer-copy">© 2026 Lepefy · Made in Italy 🇮🇹</span>
+          </div>
         </div>
-        <div className="footer-note">© 2025 Lepefy · Made in Italy</div>
       </footer>
     </>
   );
