@@ -29,11 +29,7 @@ function safeUrl(url: string | null): string | null {
   return null;
 }
 
-const PinSvg = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 1.5C5.515 1.5 3.5 3.515 3.5 6c0 3.75 4.5 8.5 4.5 8.5S12.5 9.75 12.5 6c0-2.485-2.015-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="currentColor" />
-  </svg>
-);
+
 
 const SearchSvg = () => (
   <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +92,7 @@ function DealCard({ deal }: { deal: Deal }) {
         <div className="deal-footer">
           {deal.location ? (
             <span className="deal-location">
-              <PinSvg /> {deal.location}
+              📍 {deal.location}
             </span>
           ) : <span />}
           {href && (
