@@ -8,7 +8,6 @@
   --border:      #E5E7EB;
   --border-dark: #D1D5DB;
 
-  /* Nuovo palette blu */
   --accent:       #2563EB;
   --accent-mid:   #1D4ED8;
   --accent-light: #EFF6FF;
@@ -251,10 +250,10 @@ nav {
   width: 100%;
 }
 
-/* ─── FILTER ROW ──────────────────────────────────── */
+/* ─── FILTER BAR ──────────────────────────────────── */
 .filters-bar {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent-border);
   border-radius: var(--radius);
   padding: 0.85rem 1.1rem;
   display: flex;
@@ -264,7 +263,7 @@ nav {
   position: sticky;
   top: 64px;
   z-index: 40;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
 }
 
 .filter-search {
@@ -273,49 +272,92 @@ nav {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--bg);
-  border: 1px solid var(--border-dark);
+  background: white;
+  border: 1.5px solid var(--accent-border);
   border-radius: 100px;
-  padding: 0.35rem 0.85rem;
+  padding: 0.4rem 0.9rem;
+  box-shadow: 0 1px 3px rgba(37,99,235,0.06);
 }
 .filter-search input {
   border: none;
   background: transparent;
   outline: none;
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text);
   width: 100%;
 }
 .filter-search input::placeholder { color: var(--text-3); }
-.filter-search svg { flex-shrink: 0; color: var(--text-3); width: 14px; height: 14px; }
+.filter-search svg {
+  flex-shrink: 0;
+  color: var(--accent);
+  width: 14px;
+  height: 14px;
+}
 
 .filter-select {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  padding: 0.38rem 0.85rem;
+  padding: 0.42rem 0.9rem;
   border-radius: 100px;
-  border: 1px solid var(--border-dark);
-  background: var(--bg);
-  color: var(--text-2);
+  border: 1.5px solid var(--accent-border);
+  background: white;
+  color: var(--accent);
+  font-weight: 500;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.15s, color 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
   letter-spacing: 0.02em;
+  box-shadow: 0 1px 3px rgba(37,99,235,0.06);
 }
-.filter-select:focus { border-color: var(--accent); color: var(--text); }
+.filter-select:focus,
+.filter-select:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
 
 .filter-reset {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: var(--text-3);
+  color: var(--accent);
   background: none;
-  border: none;
+  border: 1.5px solid var(--accent-border);
+  border-radius: 100px;
   cursor: pointer;
-  padding: 0.3rem 0.5rem;
-  transition: color 0.15s;
+  padding: 0.38rem 0.7rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.filter-reset:hover { color: var(--danger); }
+.filter-reset:hover {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+@media (prefers-color-scheme: dark) {
+  .filters-bar {
+    background: rgba(30, 58, 95, 0.4);
+    border-color: #1E40AF;
+  }
+  .filter-search {
+    background: var(--bg-2);
+    border-color: #1E40AF;
+  }
+  .filter-select {
+    background: var(--bg-2);
+    color: #60A5FA;
+    border-color: #1E40AF;
+  }
+  .filter-select:hover,
+  .filter-select:focus {
+    background: var(--accent);
+    color: white;
+  }
+  .filter-reset {
+    color: #60A5FA;
+    border-color: #1E40AF;
+  }
+}
 
 .deals-counter {
   font-size: 0.85rem;
@@ -346,7 +388,6 @@ nav {
   transform: translateY(-2px);
 }
 
-/* Immagine */
 .deal-img-wrap {
   position: relative;
   width: 100%;
@@ -369,7 +410,6 @@ nav {
 }
 .deal-img-placeholder img { width: 48px; height: 48px; opacity: 0.25; }
 
-/* Badge overlay sull'immagine */
 .deal-badges {
   position: absolute;
   top: 0.5rem;
@@ -392,7 +432,6 @@ nav {
 .badge-top   { background: #F59E0B; color: white; }
 .badge-score { background: #2563EB; color: white; }
 
-/* Body */
 .deal-body {
   padding: 0.85rem 1rem;
   display: flex;
@@ -730,7 +769,6 @@ body.deals-page { padding-bottom: 72px; }
 .notice-info  { background: var(--accent-light); color: var(--accent); border-color: var(--accent-border); }
 .notice-error { background: #FEF2F2; color: var(--danger); border-color: #FECACA; }
 
-/* Benefits sidebar */
 .sub-benefits { display: flex; flex-direction: column; gap: 0.75rem; }
 .benefit-item {
   display: flex;
@@ -754,7 +792,6 @@ body.deals-page { padding-bottom: 72px; }
 .social-proof-title { font-size: 0.82rem; font-weight: 700; color: var(--success); margin-bottom: 0.3rem; }
 .social-proof-quote { font-size: 0.75rem; color: #047857; font-style: italic; line-height: 1.5; }
 
-/* Success block */
 .success-block {
   text-align: center;
   padding: 3rem 2rem;
@@ -768,7 +805,6 @@ body.deals-page { padding-bottom: 72px; }
 .success-block h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
 .success-block p { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; }
 
-/* FAQ */
 .faq-section {
   background: var(--bg-2);
   border-top: 1px solid var(--border);
@@ -870,7 +906,6 @@ body.deals-page { padding-bottom: 72px; }
 }
 .mission-btn:hover { background: var(--accent-mid); }
 
-/* Flow card */
 .flow-card {
   background: var(--bg-2);
   border: 1px solid var(--border);
@@ -883,7 +918,6 @@ body.deals-page { padding-bottom: 72px; }
   width: 1px;
   height: 1.25rem;
   background: var(--accent-border);
-  margin-left: 13px;
   margin: 0.35rem 0 0.35rem 13px;
 }
 .flow-num {
@@ -903,7 +937,6 @@ body.deals-page { padding-bottom: 72px; }
 .flow-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
 .flow-desc  { font-size: 0.78rem; color: var(--text-2); line-height: 1.45; }
 
-/* Stats */
 .stats-section {
   background: var(--bg-2);
   border-top: 1px solid var(--border);
@@ -935,7 +968,6 @@ body.deals-page { padding-bottom: 72px; }
   text-transform: uppercase;
 }
 
-/* Testimonials */
 .testimonials-section {
   max-width: 1000px;
   margin: 0 auto;
@@ -974,7 +1006,6 @@ body.deals-page { padding-bottom: 72px; }
 .testimonial-author { font-size: 0.85rem; font-weight: 700; color: var(--text); }
 .testimonial-city   { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-3); }
 
-/* CTA finale chi-siamo */
 .chi-cta {
   background: var(--accent);
   padding: 4rem 2rem;
