@@ -48,11 +48,21 @@ const SECTIONS = [
             Filtro applicato agli annunci notificati.
           </li>
         </ul>
-        <p>
-          Non raccogliamo dati sensibili (categorie particolari ai sensi dell&apos;art. 9 GDPR),
-          dati di minori, né dati di pagamento diretti (i pagamenti vengono gestiti da provider
-          terzi certificati PCI-DSS).
-        </p>
+        <div className="non-raccolti-box">
+          <div className="non-raccolti-title">✅ Cosa NON raccogliamo</div>
+          <div className="non-raccolti-grid">
+            {[
+              { label: 'Dati di pagamento',  desc: 'Nessun numero di carta o IBAN — i pagamenti sono gestiti da provider certificati PCI-DSS.' },
+              { label: 'Dati sensibili',     desc: 'Nessun dato di salute, origine etnica, orientamento politico o religioso (art. 9 GDPR).' },
+              { label: 'Dati di minori',     desc: 'Il servizio è riservato a persone maggiorenni. Non raccogliamo dati di under 18.' },
+            ].map(item => (
+              <div key={item.label} className="non-raccolti-item">
+                <strong>{item.label}</strong>
+                <span>{item.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </>
     ),
   },
@@ -194,8 +204,7 @@ const SECTIONS = [
     content: (
       <>
         <p>
-          Adottiamo misure tecniche e organizzative adeguate per proteggere i tuoi dati da
-          accessi non autorizzati, perdita o divulgazione accidentale:
+          Usiamo la stessa tecnologia delle banche per proteggere i tuoi dati. Nello specifico:
         </p>
         <ul>
           <li>Comunicazioni cifrate via HTTPS/TLS su tutti gli endpoint.</li>
@@ -275,11 +284,17 @@ export default function PrivacyPage() {
         {/* Corpo del documento */}
         <main className="privacy-body">
           <div className="privacy-intro-box">
-            <span className="privacy-intro-icon">ℹ️</span>
-            <p>
-              Questa informativa descrive come Lepefy raccoglie, usa e protegge i tuoi dati
-              personali. Ti invitiamo a leggerla prima di iscriverti al servizio.
-            </p>
+            <span className="privacy-intro-icon">🔒</span>
+            <div>
+              <p style={{ fontWeight: 600, marginBottom: '0.35rem' }}>
+                La tua privacy è importante per noi. Non vendiamo i tuoi dati e li proteggiamo
+                con le migliori tecnologie disponibili.
+              </p>
+              <p>
+                Questa informativa descrive in modo trasparente come Lepefy raccoglie, usa e
+                protegge i tuoi dati personali. Ti invitiamo a leggerla prima di iscriverti.
+              </p>
+            </div>
           </div>
 
           {SECTIONS.map((s) => (
@@ -479,6 +494,40 @@ export default function PrivacyPage() {
         .finalita-art {
           color: var(--text-3);
           font-size: 0.75rem;
+        }
+
+        /* Box "Cosa NON raccogliamo" */
+        .non-raccolti-box {
+          background: var(--success-light);
+          border: 1px solid var(--success-border);
+          border-radius: var(--radius-sm);
+          padding: 1rem 1.1rem;
+          margin: 0.75rem 0 0.5rem;
+        }
+        .non-raccolti-title {
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--text);
+          margin-bottom: 0.75rem;
+        }
+        .non-raccolti-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .non-raccolti-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.1rem;
+        }
+        .non-raccolti-item strong {
+          font-size: 0.82rem;
+          color: var(--text);
+        }
+        .non-raccolti-item span {
+          font-size: 0.78rem;
+          color: var(--text-2);
+          line-height: 1.55;
         }
 
         /* Contact CTA */
