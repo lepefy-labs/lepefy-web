@@ -97,8 +97,10 @@ const FAQ = [
 async function searchKeywords(query: string, cfg: SegmentConfig): Promise<string[]> {
   if (query.length < 2) return [];
 
+  // PostgREST: ilike usa % come wildcard (non *)
+  const wildcard = encodeURIComponent(`%${query}%`);
   let url = `${SUPABASE_URL}/rest/v1/keywords`
-    + `?keyword=ilike.*${encodeURIComponent(query)}*`
+    + `?keyword=ilike.${wildcard}`
     + `&active=eq.true`
     + `&include_defective=eq.${cfg.kwFilter.include_defective}`
     + `&select=keyword`
@@ -109,20 +111,40 @@ async function searchKeywords(query: string, cfg: SegmentConfig): Promise<string
     url += `&only_collector=eq.${cfg.kwFilter.only_collector}`;
   }
 
-  const res = await fetch(url, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } });
-  if (!res.ok) return [];
-  const data: { keyword: string }[] = await res.json();
-  return data.map(r => r.keyword);
+  try {
+    const res = await fetch(url, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('[Lepefy] searchKeywords', res.status, err);
+      return [];
+    }
+    const data: { keyword: string }[] = await res.json();
+    return data.map(r => r.keyword);
+  } catch (e) {
+    console.error('[Lepefy] searchKeywords fetch failed', e);
+    return [];
+  }
 }
 
 /** Salva una richiesta di nuova keyword. */
 async function requestKeyword(keyword: string, email: string, segment: Segment): Promise<boolean> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/keyword_requests`, {
-    method:  'POST',
-    headers: { ...HEADERS, Prefer: 'return=minimal' },
-    body:    JSON.stringify({ keyword: keyword.trim().toLowerCase(), email: email || null, segment }),
-  });
-  return res.ok;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/keyword_requests`, {
+      method:  'POST',
+      headers: { ...HEADERS, Prefer: 'return=minimal' },
+      body:    JSON.stringify({ keyword: keyword.trim().toLowerCase(), email: email || null, segment }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('[Lepefy] requestKeyword', res.status, err);
+    }
+    return res.ok;
+  } catch (e) {
+    console.error('[Lepefy] requestKeyword fetch failed', e);
+    return false;
+  }
 }
 
 /** Crea la subscription direttamente (no waitlist). */
