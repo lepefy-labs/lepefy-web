@@ -341,25 +341,35 @@ export default function DealsGrid({ initialDeals }: { initialDeals: Deal[] }) {
         )}
       </div>
 
-      {/* Grid */}
-      <div className="deals-grid">
-        {filtered.length === 0 ? (
+      {/* Grid — un solo CTA banner a metà griglia */}
+      {filtered.length === 0 ? (
+        <div className="deals-grid">
           <div className="no-deals">Nessun deal trovato con questi filtri.</div>
-        ) : (
-          filtered.map((deal) => (
-              <DealCard key={deal.id} deal={deal} onOpenModal={setSelectedDeal} />
-            ))
-        )}
-      </div>
-
-      {/* CTA inline dopo la griglia */}
-      {initialDeals.length >= 4 && (
-        <div className="cta-inline">
-          <h3>Vuoi ricevere gli alert in tempo reale?</h3>
-          <p>Questi deal hanno già 12+ ore. Gli abbonati li vedono subito — prima che spariscano.</p>
-          <Link href="/abbonati" className="cta-inline-btn">Iscriviti alla beta →</Link>
-          <div className="cta-inline-note">ACCESSO ANTICIPATO · NIENTE SPAM</div>
         </div>
+      ) : (
+        <>
+          {/* Prima metà */}
+          <div className="deals-grid">
+            {filtered.slice(0, Math.ceil(filtered.length / 2)).map((deal) => (
+              <DealCard key={deal.id} deal={deal} onOpenModal={setSelectedDeal} />
+            ))}
+          </div>
+
+          {/* CTA unico — a metà scroll */}
+          <div className="cta-inline">
+            <h3>Vuoi ricevere gli alert in tempo reale?</h3>
+            <p>Questi deal hanno già 12+ ore. Gli abbonati li vedono subito — prima che spariscano.</p>
+            <Link href="/abbonati" className="cta-inline-btn">Iscriviti alla beta →</Link>
+            <div className="cta-inline-note">ACCESSO ANTICIPATO · NIENTE SPAM</div>
+          </div>
+
+          {/* Seconda metà */}
+          <div className="deals-grid">
+            {filtered.slice(Math.ceil(filtered.length / 2)).map((deal) => (
+              <DealCard key={deal.id} deal={deal} onOpenModal={setSelectedDeal} />
+            ))}
+          </div>
+        </>
       )}
 
       {/* Sticky CTA mobile */}
