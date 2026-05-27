@@ -8,10 +8,11 @@ export const metadata: Metadata = {
 };
 
 const STATS = [
-  { val: '12.450+', desc: 'Deal analizzati questa settimana' },
-  { val: '92%',     desc: 'Soddisfazione utenti' },
-  { val: '€500k+',  desc: 'Risparmiati dagli utenti' },
-  { val: '15 min',  desc: 'Frequenza aggiornamento' },
+  // ✏️ MODIFICA 3: aggiunte icone per le stat card
+  { val: '12.450+', desc: 'Deal analizzati questa settimana', icon: '📊' },
+  { val: '92%',     desc: 'Soddisfazione utenti',            icon: '😊' },
+  { val: '€500k+',  desc: 'Risparmiati dagli utenti',        icon: '💰' },
+  { val: '15 min',  desc: 'Frequenza aggiornamento',         icon: '⏱️' },
 ];
 
 const FLOW = [
@@ -22,9 +23,14 @@ const FLOW = [
 
 const TESTIMONIALS = [
   { quote: 'Grazie a Lepefy ho comprato un Canon EOS R6 a €800 invece di €1.400! Deal trovato in due minuti.', author: 'Luca M.', city: 'Milano' },
-  { quote: 'Finalmente uno strumento serio per chi fa flipping. I deal sono buoni e l\'AI spiega sempre il perché.', author: 'Davide R.', city: 'Torino' },
-  { quote: 'Ho recuperato il costo dell\'abbonamento con il primo affare. Strumento indispensabile.', author: 'Marco P.', city: 'Roma' },
+  { quote: "Finalmente uno strumento serio per chi fa flipping. I deal sono buoni e l'AI spiega sempre il perché.", author: 'Davide R.', city: 'Torino' },
+  { quote: "Ho recuperato il costo dell'abbonamento con il primo affare. Strumento indispensabile.", author: 'Marco P.', city: 'Roma' },
 ];
+
+// ✏️ MODIFICA 4: helper per le iniziali avatar
+function getInitials(name: string): string {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase();
+}
 
 export default function ChiSiamoPage() {
   return (
@@ -42,12 +48,16 @@ export default function ChiSiamoPage() {
       </nav>
 
       {/* HERO */}
+      {/*
+        ✏️ MODIFICA 1: h1 usa la nuova classe page-hero-title-strong (font-weight 900)
+        ✏️ MODIFICA 1: <p> riscritto con beneficio concreto al posto della descrizione generica
+      */}
       <section className="page-hero">
         <div className="page-hero-label">Il nostro progetto</div>
-        <h1>Chi Siamo</h1>
+        <h1 className="page-hero-title-strong">Chi Siamo</h1>
         <p>
-          Lepefy è un progetto italiano che aiuta migliaia di persone a risparmiare
-          su elettronica e fotografia usata, trovando le occasioni prima che spariscano.
+          Troviamo per te gli annunci sottoprezzi su Subito.it e Vinted.it —
+          prima che li comprino gli altri.
         </p>
       </section>
 
@@ -55,8 +65,14 @@ export default function ChiSiamoPage() {
       <div className="mission-section">
         <div>
           <div className="mission-label">La nostra missione</div>
+          {/*
+            ✏️ MODIFICA 2: "70%" avvolto in <span className="stat-highlight">
+            per dargli accent color e font-size maggiore, mantenendo coerenza col design system
+          */}
           <h2 className="mission-title">
-            Il 70% degli annunci ha prezzi{' '}
+            Il{' '}
+            <span className="stat-highlight">70%</span>
+            {' '}degli annunci ha prezzi{' '}
             <span className="highlight">sottostimati</span> del 20–50%.
             Noi li troviamo per te.
           </h2>
@@ -85,10 +101,12 @@ export default function ChiSiamoPage() {
       </div>
 
       {/* STATISTICHE */}
+      {/* ✏️ MODIFICA 3: aggiunta <div className="stat-icon"> con emoji per ogni stat */}
       <div className="stats-section">
         <div className="stats-grid">
           {STATS.map((s) => (
             <div key={s.val} className="stat-item">
+              <div className="stat-icon">{s.icon}</div>
               <div className="stat-val">{s.val}</div>
               <div className="stat-desc">{s.desc}</div>
             </div>
@@ -97,15 +115,22 @@ export default function ChiSiamoPage() {
       </div>
 
       {/* TESTIMONIANZE */}
+      {/*
+        ✏️ MODIFICA 4: aggiunto testimonial-footer con avatar iniziali dinamiche
+        Il testimonial-card ora ha border-left accent (via CSS)
+      */}
       <div className="testimonials-section">
         <div className="testimonials-title">Cosa dicono i nostri utenti</div>
         <div className="testimonials-grid">
           {TESTIMONIALS.map((t) => (
             <div key={t.author} className="testimonial-card">
               <div className="testimonial-quote">&ldquo;{t.quote}&rdquo;</div>
-              <div>
-                <div className="testimonial-author">— {t.author}</div>
-                <div className="testimonial-city">{t.city}</div>
+              <div className="testimonial-footer">
+                <div className="testimonial-avatar">{getInitials(t.author)}</div>
+                <div>
+                  <div className="testimonial-author">{t.author}</div>
+                  <div className="testimonial-city">{t.city}</div>
+                </div>
               </div>
             </div>
           ))}
