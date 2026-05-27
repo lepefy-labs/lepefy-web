@@ -84,7 +84,7 @@ export default function DealModal({ deal, onClose }: Props) {
   const platform = sourceLabel(deal.source);
   const isSubito = deal.source.toLowerCase().includes('subito');
   const location = getLocationInfo(deal.location);
-  const isTopDeal = deal.score >= 9;
+  const isTopDeal = deal.score >= 9 || deal.margine_stimato > 200;
 
   // Chiude con ESC, blocca scroll del body
   useEffect(() => {
