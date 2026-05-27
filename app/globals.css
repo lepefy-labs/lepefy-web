@@ -207,6 +207,29 @@ nav {
 }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
+/* CTA principale — arancione, ombra, per le conversioni */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #F59E0B;
+  color: white;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn-cta:hover {
+  background: #D97706;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+.btn-cta:active { transform: scale(0.98); }
+
 /* ─── PROMO BANNER ────────────────────────────────── */
 .promo-banner {
   background: linear-gradient(to right, var(--accent), var(--success));
@@ -463,6 +486,25 @@ nav {
 .badge-subito { background: #FFF7ED; color: #C2410C; border-color: #FED7AA; }
 .badge-vinted { background: #F0FDFA; color: #0F766E; border-color: #99F6E4; }
 .badge-other  { background: var(--bg); color: var(--text-3); border-color: var(--border); }
+
+/* Icona lettera brand-safe per Subito (S) e Vinted (V) */
+.source-icon {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 8px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 1;
+}
+.source-icon--subito { background: #E8431A; }
+.source-icon--vinted { background: #0F766E; }
 
 .deal-condition {
   font-family: var(--font-mono);
