@@ -49,7 +49,7 @@ export default async function DealsPage() {
             Gli abbonati li vedono <strong>12 ore prima</strong>.
           </p>
           <div className="hero-cta-row">
-            <Link href="/abbonati" className="btn-primary">Prova Gratis per 7 Giorni →</Link>
+            <Link href="/abbonati" className="btn-cta">Prova Gratis per 7 Giorni →</Link>
             <Link href="/chi-siamo" className="btn-secondary">Come funziona?</Link>
           </div>
         </div>

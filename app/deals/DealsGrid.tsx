@@ -21,6 +21,24 @@ function sourceBadgeClass(source: string) {
   return 'deal-source-badge badge-other';
 }
 
+function SourceBadge({ source }: { source: string }) {
+  const s = source.toLowerCase();
+  const isSubito = s.includes('subito');
+  const isVinted = s.includes('vinted');
+  const label = isSubito ? 'Subito.it' : isVinted ? 'Vinted' : source;
+  const cls = isSubito ? 'badge-subito' : isVinted ? 'badge-vinted' : 'badge-other';
+  return (
+    <span className={`deal-source-badge ${cls}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+      {(isSubito || isVinted) && (
+        <span className={`source-icon ${isSubito ? 'source-icon--subito' : 'source-icon--vinted'}`}>
+          {isSubito ? 'S' : 'V'}
+        </span>
+      )}
+      {label}
+    </span>
+  );
+}
+
 const COUNTRY_CODES: Record<string, string> = {
   'francia':        'fr',
   'france':         'fr',
@@ -148,7 +166,7 @@ function DealCard({ deal, onOpenModal }: { deal: Deal; onOpenModal: (deal: Deal)
       {/* Body */}
       <div className="deal-body">
         <div className="deal-top">
-          <span className={sourceBadgeClass(deal.source)}>{platform}</span>
+          <SourceBadge source={deal.source} />
           {deal.condition && (
             <span className="deal-condition">{deal.condition}</span>
           )}

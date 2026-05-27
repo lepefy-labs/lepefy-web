@@ -57,6 +57,26 @@ function getLocationInfo(location: string | null) {
   return { label: location, countryCode: null, foreign: false };
 }
 
+// ─── SourceBadge ─────────────────────────────────────────────────────────────
+
+function SourceBadge({ source }: { source: string }) {
+  const s = source.toLowerCase();
+  const isSubito = s.includes('subito');
+  const isVinted = s.includes('vinted');
+  const label = isSubito ? 'Subito.it' : isVinted ? 'Vinted' : source;
+  const cls = isSubito ? 'badge-subito' : isVinted ? 'badge-vinted' : 'badge-other';
+  return (
+    <span className={`deal-source-badge ${cls}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+      {(isSubito || isVinted) && (
+        <span className={`source-icon ${isSubito ? 'source-icon--subito' : 'source-icon--vinted'}`}>
+          {isSubito ? 'S' : 'V'}
+        </span>
+      )}
+      {label}
+    </span>
+  );
+}
+
 // ─── ScoreBar ─────────────────────────────────────────────────────────────────
 
 function ScoreBar({ score }: { score: number }) {
@@ -106,9 +126,7 @@ export default function DealModal({ deal, onClose }: Props) {
           <div className="modal-header-badges">
             {isTopDeal && <span className="badge badge-top">⚡ Top Deal</span>}
             <span className="badge badge-score">Score {deal.score}/10</span>
-            <span className={`deal-source-badge ${isSubito ? 'badge-subito' : 'badge-vinted'}`}>
-              {platform}
-            </span>
+            <SourceBadge source={deal.source} />
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Chiudi">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
