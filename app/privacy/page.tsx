@@ -62,36 +62,24 @@ const SECTIONS = [
     title: 'Finalità e Base Giuridica del Trattamento',
     content: (
       <>
-        <table className="privacy-table">
-          <thead>
-            <tr>
-              <th>Finalità</th>
-              <th>Base giuridica</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Erogazione del servizio (invio notifiche deal via email)</td>
-              <td>Esecuzione del contratto / consenso (art. 6 lett. b e lett. a GDPR)</td>
-            </tr>
-            <tr>
-              <td>Personalizzazione dei deal in base alle preferenze</td>
-              <td>Consenso (art. 6 lett. a GDPR)</td>
-            </tr>
-            <tr>
-              <td>Comunicazioni di servizio (aggiornamenti, modifiche ai piani)</td>
-              <td>Legittimo interesse del Titolare (art. 6 lett. f GDPR)</td>
-            </tr>
-            <tr>
-              <td>Prevenzione di abusi e sicurezza della piattaforma</td>
-              <td>Legittimo interesse del Titolare (art. 6 lett. f GDPR)</td>
-            </tr>
-            <tr>
-              <td>Adempimenti legali e fiscali</td>
-              <td>Obbligo di legge (art. 6 lett. c GDPR)</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="finalita-list">
+          {[
+            { scopo: 'Erogazione del servizio',        desc: 'Invio notifiche deal via email.',                          base: 'Esecuzione del contratto / consenso',  art: 'art. 6 lett. a, b GDPR' },
+            { scopo: 'Personalizzazione dei deal',     desc: 'Filtraggio degli annunci in base a keyword e fascia prezzo.', base: 'Consenso',                            art: 'art. 6 lett. a GDPR'    },
+            { scopo: 'Comunicazioni di servizio',      desc: 'Aggiornamenti sul prodotto e modifiche ai piani.',         base: 'Legittimo interesse',                  art: 'art. 6 lett. f GDPR'    },
+            { scopo: 'Sicurezza della piattaforma',    desc: 'Prevenzione di abusi e accessi non autorizzati.',          base: 'Legittimo interesse',                  art: 'art. 6 lett. f GDPR'    },
+            { scopo: 'Adempimenti legali e fiscali',   desc: 'Obblighi di legge applicabili.',                           base: 'Obbligo di legge',                     art: 'art. 6 lett. c GDPR'    },
+          ].map((item) => (
+            <div key={item.scopo} className="finalita-card">
+              <div className="finalita-scopo">{item.scopo}</div>
+              <div className="finalita-desc">{item.desc}</div>
+              <div className="finalita-base">
+                <span className="finalita-base-label">Base giuridica</span>
+                {item.base} <span className="finalita-art">({item.art})</span>
+              </div>
+            </div>
+          ))}
+        </div>
         <p>
           Non trattiamo i tuoi dati per finalità di marketing di terze parti né li vendiamo o
           cediamo a inserzionisti.
@@ -447,36 +435,51 @@ export default function PrivacyPage() {
           line-height: 1.65;
         }
 
-        /* Tabella */
-        .privacy-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 0.82rem;
+        /* Card finalità */
+        .finalita-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem;
           margin: 0.75rem 0 0.85rem;
-          border-radius: var(--radius-sm);
-          overflow: hidden;
-          border: 1px solid var(--border);
         }
-        .privacy-table th {
+        .finalita-card {
           background: var(--bg);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-sm);
+          padding: 0.85rem 1rem;
+        }
+        .finalita-scopo {
+          font-size: 0.875rem;
+          font-weight: 700;
+          color: var(--text);
+          margin-bottom: 0.2rem;
+        }
+        .finalita-desc {
+          font-size: 0.82rem;
+          color: var(--text-2);
+          line-height: 1.55;
+          margin-bottom: 0.5rem;
+        }
+        .finalita-base {
+          font-size: 0.78rem;
+          color: var(--text-2);
+          display: flex;
+          align-items: baseline;
+          gap: 0.4rem;
+          flex-wrap: wrap;
+        }
+        .finalita-base-label {
           font-family: var(--font-mono);
-          font-size: 0.62rem;
+          font-size: 0.6rem;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           color: var(--text-3);
-          padding: 0.6rem 0.85rem;
-          text-align: left;
-          border-bottom: 1px solid var(--border);
+          flex-shrink: 0;
         }
-        .privacy-table td {
-          padding: 0.65rem 0.85rem;
-          color: var(--text-2);
-          border-bottom: 1px solid var(--border);
-          vertical-align: top;
-          line-height: 1.55;
+        .finalita-art {
+          color: var(--text-3);
+          font-size: 0.75rem;
         }
-        .privacy-table tr:last-child td { border-bottom: none; }
-        .privacy-table tr:nth-child(even) td { background: var(--bg); }
 
         /* Contact CTA */
         .privacy-contact-box {
