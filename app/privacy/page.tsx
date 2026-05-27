@@ -40,16 +40,12 @@ const SECTIONS = [
             per l&apos;invio delle notifiche deal.
           </li>
           <li>
-            <strong>Categoria di interesse</strong> — ad esempio Fotografia, Elettronica,
-            Smartphone. Obbligatoria per personalizzare le notifiche.
+            <strong>Keyword di ricerca</strong> — es. &quot;Canon EOS R6&quot;, &quot;iPhone 13 rotto&quot;.
+            Obbligatoria, definisce gli annunci monitorati e personalizza le notifiche ricevute.
           </li>
           <li>
-            <strong>Marca / Modello preferito</strong> — opzionale, consente di affinare
-            ulteriormente la selezione dei deal ricevuti.
-          </li>
-          <li>
-            <strong>Fascia di prezzo</strong> — opzionale, filtro minimo/massimo sugli annunci
-            notificati.
+            <strong>Fascia di prezzo</strong> — prezzo minimo e massimo in euro, opzionale.
+            Filtro applicato agli annunci notificati.
           </li>
         </ul>
         <p>
@@ -268,7 +264,6 @@ export default function PrivacyPage() {
         <p>
           Informativa sul trattamento dei dati personali ai sensi del{' '}
           <strong>Regolamento UE 2016/679 (GDPR)</strong>.
-          Ultima revisione: <strong>Maggio 2026</strong>.
         </p>
       </section>
 
