@@ -20,6 +20,81 @@ function sourceBadgeClass(source: string) {
   return 'deal-source-badge badge-other';
 }
 
+const COUNTRY_CODES: Record<string, string> = {
+  'francia':        'fr',
+  'france':         'fr',
+  'germania':       'de',
+  'germany':        'de',
+  'spagna':         'es',
+  'spain':          'es',
+  'portogallo':     'pt',
+  'portugal':       'pt',
+  'belgio':         'be',
+  'belgium':        'be',
+  'paesi bassi':    'nl',
+  'netherlands':    'nl',
+  'austria':        'at',
+  'svizzera':       'ch',
+  'switzerland':    'ch',
+  'polonia':        'pl',
+  'poland':         'pl',
+  'repubblica ceca':'cz',
+  'czech':          'cz',
+  'ungheria':       'hu',
+  'hungary':        'hu',
+  'grecia':         'gr',
+  'greece':         'gr',
+  'romania':        'ro',
+  'svezia':         'se',
+  'sweden':         'se',
+  'regno unito':    'gb',
+  'united kingdom': 'gb',
+  'danimarca':      'dk',
+  'denmark':        'dk',
+  'norvegia':       'no',
+  'norway':         'no',
+  'finlandia':      'fi',
+  'finland':        'fi',
+  'croazia':        'hr',
+  'croatia':        'hr',
+  'slovacchia':     'sk',
+  'slovakia':       'sk',
+  'slovenia':       'si',
+  'bulgaria':       'bg',
+  'serbia':         'rs',
+};
+
+const ITALY_KEYWORDS = ['italia', 'italy', 'lombardia', 'lazio', 'campania',
+  'veneto', 'sicilia', 'piemonte', 'toscana', 'emilia', 'puglia', 'calabria',
+  'sardegna', 'liguria', 'marche', 'abruzzo', 'friuli', 'umbria', 'basilicata',
+  'molise', "valle d'aosta", 'trentino'];
+
+function locationDisplay(location: string | null): {
+  city: string | null;
+  countryCode: string | null;
+  foreign: boolean;
+} | null {
+  if (!location) return null;
+  const lower = location.toLowerCase();
+
+  // Italiana
+  if (ITALY_KEYWORDS.some((k) => lower.includes(k))) {
+    return { city: location, countryCode: null, foreign: false };
+  }
+
+  // Estera — estrae la città (prima della virgola) e il codice ISO
+  for (const [country, code] of Object.entries(COUNTRY_CODES)) {
+    if (lower.includes(country)) {
+      const parts = location.split(',');
+      const city = parts.length > 1 ? parts[0].trim() : null;
+      return { city, countryCode: code, foreign: true };
+    }
+  }
+
+  // Fallback italiano
+  return { city: location, countryCode: null, foreign: false };
+}
+
 function safeUrl(url: string | null): string | null {
   if (!url) return null;
   try {
@@ -90,11 +165,29 @@ function DealCard({ deal }: { deal: Deal }) {
         )}
 
         <div className="deal-footer">
-          {deal.location ? (
-            <span className="deal-location">
-              📍 {deal.location}
-            </span>
-          ) : <span />}
+          {(() => {
+            const loc = locationDisplay(deal.location);
+            if (!loc) return <span />;
+            const label = loc.foreign
+              ? `📍 ${loc.city ? `${loc.city}, ` : ''}${loc.countryCode!.toUpperCase()}`
+              : `📍 ${loc.city}`;
+            return (
+              <span className={`deal-location${loc.foreign ? ' deal-location--foreign' : ''}`}>
+                {label}
+                {loc.countryCode && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={`https://flagcdn.com/16x12/${loc.countryCode}.png`}
+                    srcSet={`https://flagcdn.com/32x24/${loc.countryCode}.png 2x`}
+                    width={16}
+                    height={12}
+                    alt={loc.countryCode.toUpperCase()}
+                    style={{ borderRadius: 2, flexShrink: 0 }}
+                  />
+                )}
+              </span>
+            );
+          })()}
           {href && (
             <a
               className="deal-link"
