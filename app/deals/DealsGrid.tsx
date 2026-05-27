@@ -119,7 +119,7 @@ function DealCard({ deal, onOpenModal }: { deal: Deal; onOpenModal: (deal: Deal)
   const [imgError, setImgError] = useState(false);
   const href = safeUrl(deal.url);
   const platform = sourceLabel(deal.source);
-  const isTopDeal = deal.score >= 9;
+  const isTopDeal = deal.score >= 9 || deal.margine_stimato > 200;
 
   return (
     <div className="deal-card deal-card--clickable" onClick={() => onOpenModal(deal)}>
