@@ -577,6 +577,7 @@ nav {
   white-space: nowrap;
   font-weight: 500;
 }
+.deal-location--foreign { color: #92400E; }
 .deal-link {
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -985,6 +986,24 @@ body.deals-page { padding-bottom: 72px; }
 .flow-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
 .flow-desc  { font-size: 0.78rem; color: var(--text-2); line-height: 1.45; }
 
+/* ── Titolo hero Chi Siamo più forte (font-weight 900) */
+.page-hero-title-strong {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+/* ── Highlight statistica numerica (es. "70%") */
+.stat-highlight {
+  color: var(--accent);
+  font-size: 1.15em;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
 .stats-section {
   background: var(--bg-2);
   border-top: 1px solid var(--border);
@@ -999,7 +1018,27 @@ body.deals-page { padding-bottom: 72px; }
   gap: 1rem;
 }
 @media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-.stat-item { text-align: center; }
+
+/* ── Stat card con icona e hover */
+.stat-item {
+  text-align: center;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.stat-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.stat-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.6rem;
+  line-height: 1;
+  display: block;
+}
 .stat-val {
   font-size: 2rem;
   font-weight: 800;
@@ -1035,9 +1074,12 @@ body.deals-page { padding-bottom: 72px; }
   gap: 1rem;
 }
 @media (max-width: 768px) { .testimonials-grid { grid-template-columns: 1fr; } }
+
+/* ── Testimonial card con border-left accent */
 .testimonial-card {
   background: var(--bg-2);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
   border-radius: var(--radius);
   padding: 1.25rem;
   display: flex;
@@ -1050,6 +1092,30 @@ body.deals-page { padding-bottom: 72px; }
   line-height: 1.6;
   font-style: italic;
   flex: 1;
+}
+
+/* ── Footer testimonianza con avatar iniziali */
+.testimonial-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.testimonial-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent-border);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  user-select: none;
 }
 .testimonial-author { font-size: 0.85rem; font-weight: 700; color: var(--text); }
 .testimonial-city   { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-3); }
@@ -1194,18 +1260,3 @@ footer {
   footer { padding: 0; }
   .footer-inner { padding: 2rem 1.25rem 1rem; }
 }
-
-.kw-dropdown {
-  position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
-  background: var(--bg-2); border: 1px solid var(--border);
-  border-radius: var(--radius); margin-top: 4px; overflow: hidden;
-}
-.kw-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.85rem; width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-size: 0.85rem; color: var(--text); border-bottom: 1px solid var(--border); }
-.kw-row:last-child { border-bottom: none; }
-.kw-item:hover { background: var(--bg-3); }
-.kw-empty { padding: 1rem; text-align: center; }
-.kw-empty-msg { font-size: 0.83rem; color: var(--text-2); margin-bottom: 0.75rem; }
-.kw-request-btn { font-size: 0.82rem; color: var(--accent); border: 1px solid var(--accent-border); background: var(--accent-light); border-radius: var(--radius); padding: 0.5rem 1rem; cursor: pointer; }
-.kw-request-sent { font-size: 0.82rem; color: var(--success); background: var(--success-light); border-radius: var(--radius); padding: 0.6rem 0.85rem; }
-.selected-kw-pill { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-light); border: 1px solid var(--accent-border); border-radius: 20px; padding: 0.35rem 0.75rem; font-size: 0.85rem; color: var(--accent); font-weight: 600; }
-.pill-remove { background: none; border: none; cursor: pointer; color: var(--accent); font-size: 1rem; line-height: 1; padding: 0; }
