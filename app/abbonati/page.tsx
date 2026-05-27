@@ -97,10 +97,10 @@ const FAQ = [
 async function searchKeywords(query: string, cfg: SegmentConfig): Promise<string[]> {
   if (query.length < 2) return [];
 
-  // PostgREST: ilike usa % come wildcard (non *)
-  const wildcard = encodeURIComponent(`%${query}%`);
+  // PostgREST accetta * come wildcard nell'ilike (tradotto in % sul DB)
+  const encoded = encodeURIComponent(query);
   let url = `${SUPABASE_URL}/rest/v1/keywords`
-    + `?keyword=ilike.${wildcard}`
+    + `?keyword=ilike.*${encoded}*`
     + `&active=eq.true`
     + `&include_defective=eq.${cfg.kwFilter.include_defective}`
     + `&select=keyword`
@@ -187,20 +187,22 @@ async function createSubscription(payload: {
 // ─── Componente Autocomplete ─────────────────────────────────────────────────
 
 interface AutocompleteProps {
-  segment:   Segment;
-  email:     string;          // serve per salvare la request
-  value:     string | null;   // keyword selezionata
-  onChange:  (kw: string | null) => void;
-  onRequest: (kw: string) => void;  // callback "richiesta inviata"
+  segment:    Segment;
+  email:      string;          // serve per salvare la request
+  emailValid: boolean;         // blocca la richiesta se false
+  value:      string | null;   // keyword selezionata
+  onChange:   (kw: string | null) => void;
+  onRequest:  (kw: string) => void;
 }
 
-function KeywordAutocomplete({ segment, email, value, onChange, onRequest }: AutocompleteProps) {
+function KeywordAutocomplete({ segment, email, emailValid, value, onChange, onRequest }: AutocompleteProps) {
   const [query,        setQuery]        = useState('');
   const [results,      setResults]      = useState<string[]>([]);
   const [open,         setOpen]         = useState(false);
   const [loading,      setLoading]      = useState(false);
   const [requestSent,  setRequestSent]  = useState(false);
   const [requestKw,    setRequestKw]    = useState('');
+  const [emailMissing, setEmailMissing]  = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapRef     = useRef<HTMLDivElement>(null);
   const cfg         = SEGMENT_CONFIG[segment];
@@ -258,6 +260,11 @@ function KeywordAutocomplete({ segment, email, value, onChange, onRequest }: Aut
   async function handleRequest() {
     const kw = query.trim();
     if (!kw) return;
+    if (!emailValid) {
+      setEmailMissing(true);
+      return;
+    }
+    setEmailMissing(false);
     await requestKeyword(kw, email, segment);
     setRequestSent(true);
     setRequestKw(kw);
@@ -332,6 +339,11 @@ function KeywordAutocomplete({ segment, email, value, onChange, onRequest }: Aut
                   <button type="button" className="kw-request-btn" onClick={handleRequest}>
                     + Richiedi questa keyword
                   </button>
+                  {emailMissing && (
+                    <div className="kw-email-warn">
+                      ❌ Inserisci prima un&apos;email valida nel campo sopra.
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -358,17 +370,22 @@ function StepDot({ n, active, done, label }: { n: number; active: boolean; done:
 // ─── Componente principale ────────────────────────────────────────────────────
 
 export default function AbbonatiPage() {
-  const [step,      setStep]      = useState<Step>(1);
-  const [segment,   setSegment]   = useState<Segment | null>(null);
-  const [email,     setEmail]     = useState('');
-  const [keyword,   setKeyword]   = useState<string | null>(null);
-  const [minPrice,  setMinPrice]  = useState(50);
-  const [maxPrice,  setMaxPrice]  = useState(500);
-  const [privacy,   setPrivacy]   = useState(false);
-  const [status,    setStatus]    = useState<Status>('idle');
-  const [emailErr,  setEmailErr]  = useState(false);
-  const [kwErr,     setKwErr]     = useState(false);
-  const [privacyErr,setPrivacyErr]= useState(false);
+  const [step,         setStep]         = useState<Step>(1);
+  const [segment,      setSegment]      = useState<Segment | null>(null);
+  const [email,        setEmail]        = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [keyword,      setKeyword]      = useState<string | null>(null);
+  const [minPrice,     setMinPrice]     = useState(50);
+  const [maxPrice,     setMaxPrice]     = useState(500);
+  const [privacy,      setPrivacy]      = useState(false);
+  const [status,       setStatus]       = useState<Status>('idle');
+  const [emailErr,     setEmailErr]     = useState(false);
+  const [kwErr,        setKwErr]        = useState(false);
+  const [privacyErr,   setPrivacyErr]   = useState(false);
+
+  // Validazione email in tempo reale
+  const emailValid = email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const priceValid = minPrice < maxPrice;
 
   const config = segment ? SEGMENT_CONFIG[segment] : null;
 
@@ -548,10 +565,19 @@ export default function AbbonatiPage() {
                 <input
                   id="email" type="email" placeholder="la.tua@email.it" autoComplete="email"
                   value={email}
-                  onChange={e => { setEmail(e.target.value); setEmailErr(false); }}
-                  className={emailErr ? 'error' : ''}
+                  onChange={e => { setEmail(e.target.value); setEmailTouched(true); setEmailErr(false); }}
+                  onBlur={() => setEmailTouched(true)}
+                  className={emailErr || (emailTouched && !emailValid && email.length > 0) ? 'error' : ''}
                 />
-                {emailErr && <span className="sub-field-note" style={{ color: 'var(--danger)' }}>Inserisci un&apos;email valida.</span>}
+                {/* Feedback in tempo reale */}
+                {emailTouched && email.length > 0 && (
+                  <span className="sub-field-note" style={{ color: emailValid ? 'var(--success)' : 'var(--danger)' }}>
+                    {emailValid ? '✅ Email valida' : '❌ Formato non valido'}
+                  </span>
+                )}
+                {emailErr && !emailTouched && (
+                  <span className="sub-field-note" style={{ color: 'var(--danger)' }}>Inserisci un&apos;email valida.</span>
+                )}
               </div>
 
               {/* Keyword autocomplete */}
@@ -560,14 +586,22 @@ export default function AbbonatiPage() {
                 <KeywordAutocomplete
                   segment={segment!}
                   email={email}
+                  emailValid={emailValid}
                   value={keyword}
                   onChange={kw => { setKeyword(kw); setKwErr(false); }}
                   onRequest={() => {}}
                 />
-                {kwErr && <span className="sub-field-note" style={{ color: 'var(--danger)' }}>Seleziona una keyword dal catalogo.</span>}
-                <span className="sub-field-note">
-                  Non trovi ciò che cerchi? Usa &ldquo;Richiedi questa keyword&rdquo; — la valutiamo entro pochi giorni.
-                </span>
+                {keyword && (
+                  <span className="sub-field-note" style={{ color: 'var(--success)' }}>✅ Keyword selezionata</span>
+                )}
+                {kwErr && !keyword && (
+                  <span className="sub-field-note" style={{ color: 'var(--danger)' }}>❌ Seleziona una keyword dal catalogo.</span>
+                )}
+                {!keyword && (
+                  <span className="sub-field-note">
+                    Non trovi ciò che cerchi? Usa &ldquo;Richiedi questa keyword&rdquo; — la valutiamo entro pochi giorni.
+                  </span>
+                )}
               </div>
 
               {/* Fascia prezzo */}
@@ -587,9 +621,9 @@ export default function AbbonatiPage() {
                       style={{ width: '100%' }} />
                   </div>
                 </div>
-                {minPrice >= maxPrice && (
-                  <span className="sub-field-note" style={{ color: 'var(--danger)' }}>Il minimo deve essere inferiore al massimo.</span>
-                )}
+                <span className="sub-field-note" style={{ color: priceValid ? 'var(--success)' : 'var(--danger)' }}>
+                  {priceValid ? `✅ Fascia: €${minPrice} – €${maxPrice}` : '❌ Il minimo deve essere inferiore al massimo'}
+                </span>
               </div>
 
               {/* Fonte */}
@@ -605,11 +639,16 @@ export default function AbbonatiPage() {
                   <input type="checkbox" checked={privacy}
                     onChange={e => { setPrivacy(e.target.checked); setPrivacyErr(false); }}
                     style={{ marginTop: 3 }} />
-                  <span style={{ color: privacyErr ? 'var(--danger)' : undefined }}>
+                  <span style={{ color: privacyErr && !privacy ? 'var(--danger)' : undefined }}>
                     Accetto la <a href="/privacy">Privacy Policy</a> *
                   </span>
                 </label>
-                {privacyErr && <span className="sub-field-note" style={{ color: 'var(--danger)' }}>Devi accettare la privacy policy.</span>}
+                {privacy && (
+                  <span className="sub-field-note" style={{ color: 'var(--success)' }}>✅ Privacy accettata</span>
+                )}
+                {privacyErr && !privacy && (
+                  <span className="sub-field-note" style={{ color: 'var(--danger)' }}>❌ Devi accettare la privacy policy.</span>
+                )}
               </div>
 
               <button type="submit" className="sub-btn"
