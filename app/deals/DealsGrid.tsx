@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import type { Deal } from '../../lib/supabase';
+import DealModal from './DealModal';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -114,14 +115,14 @@ const SearchSvg = () => (
 
 // ─── DealCard ─────────────────────────────────────────────────────────────────
 
-function DealCard({ deal }: { deal: Deal }) {
+function DealCard({ deal, onOpenModal }: { deal: Deal; onOpenModal: (deal: Deal) => void }) {
   const [imgError, setImgError] = useState(false);
   const href = safeUrl(deal.url);
   const platform = sourceLabel(deal.source);
   const isTopDeal = deal.score >= 9;
 
   return (
-    <div className="deal-card">
+    <div className="deal-card deal-card--clickable" onClick={() => onOpenModal(deal)}>
       {/* Immagine + Badge overlay */}
       <div className="deal-img-wrap">
         {!imgError && deal.image_url ? (
@@ -194,10 +195,19 @@ function DealCard({ deal }: { deal: Deal }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
             >
               Vedi su {platform} →
             </a>
           )}
+        </div>
+
+        {/* Affordance "dettagli" */}
+        <div className="deal-expand-hint">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+          </svg>
+          Dettagli completi
         </div>
       </div>
     </div>
@@ -212,13 +222,14 @@ type SortBy   = 'score' | 'margin' | 'price_asc' | 'price_desc' | 'date';
 // ─── DealsGrid ────────────────────────────────────────────────────────────────
 
 export default function DealsGrid({ initialDeals }: { initialDeals: Deal[] }) {
-  const [search,     setSearch]     = useState('');
-  const [platform,   setPlatform]   = useState<Platform>('tutti');
-  const [keyword,    setKeyword]    = useState('');
-  const [minScore,   setMinScore]   = useState(0);
-  const [sortBy,     setSortBy]     = useState<SortBy>('score');
-  const [showSticky, setShowSticky] = useState(false);
-  const [fetchedAt,  setFetchedAt]  = useState('');
+  const [search,        setSearch]        = useState('');
+  const [platform,      setPlatform]      = useState<Platform>('tutti');
+  const [keyword,       setKeyword]       = useState('');
+  const [minScore,      setMinScore]      = useState(0);
+  const [sortBy,        setSortBy]        = useState<SortBy>('score');
+  const [showSticky,    setShowSticky]    = useState(false);
+  const [fetchedAt,     setFetchedAt]     = useState('');
+  const [selectedDeal,  setSelectedDeal]  = useState<Deal | null>(null);
 
   useEffect(() => {
     setFetchedAt(new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }));
@@ -335,7 +346,9 @@ export default function DealsGrid({ initialDeals }: { initialDeals: Deal[] }) {
         {filtered.length === 0 ? (
           <div className="no-deals">Nessun deal trovato con questi filtri.</div>
         ) : (
-          filtered.map((deal) => <DealCard key={deal.id} deal={deal} />)
+          filtered.map((deal) => (
+              <DealCard key={deal.id} deal={deal} onOpenModal={setSelectedDeal} />
+            ))
         )}
       </div>
 
@@ -357,6 +370,11 @@ export default function DealsGrid({ initialDeals }: { initialDeals: Deal[] }) {
         </p>
         <Link href="/abbonati">Iscriviti →</Link>
       </div>
+
+      {/* Modal dettaglio deal */}
+      {selectedDeal && (
+        <DealModal deal={selectedDeal} onClose={() => setSelectedDeal(null)} />
+      )}
     </>
   );
 }
