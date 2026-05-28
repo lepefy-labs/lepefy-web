@@ -1198,6 +1198,12 @@ body.deals-page { padding-bottom: 72px; }
 .modal-cta-secondary:hover { background:var(--accent-border); }
 @media (max-width:480px) { .modal-card{max-height:95vh;border-radius:var(--radius) var(--radius) 0 0;} .modal-backdrop{align-items:flex-end;padding:0;} .modal-title{font-size:1.05rem;} .modal-price{font-size:1.4rem;} .modal-meta-grid{grid-template-columns:1fr;} }
 
+/* Pulse dot - step 1 abbonati */
+@keyframes lepefyPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .5; transform: scale(1.4); }
+}
+
 /* ─── FOOTER ──────────────────────────────────────── */
 footer {
   background: var(--bg-2);
