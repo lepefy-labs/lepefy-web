@@ -484,7 +484,10 @@ export default function AbbonatiPage() {
         </h1>
         <p>
           {step === 1
-            ? 'Scegli il tuo profilo per ricevere deal calibrati sulla tua attività.'
+            ? <span style={{ display:'inline-flex', alignItems:'center', gap:'0.4rem', fontWeight:500, color:'var(--text)' }}>
+                <span style={{ width:7, height:7, borderRadius:'50%', background:'var(--success)', display:'inline-block', animation:'lepefyPulse 1.5s ease-in-out infinite' }} />
+                Seleziona il tuo profilo per iniziare
+              </span>
             : 'Cerca tra le keyword del catalogo — solo keyword ottimizzate, zero rumore.'}
         </p>
       </section>
@@ -506,20 +509,24 @@ export default function AbbonatiPage() {
                   gap:           '1rem',
                   padding:       '1.25rem 1.5rem',
                   background:    'var(--bg-2)',
-                  border:        '1px solid var(--border)',
+                  border:        '1.5px solid var(--border)',
                   borderRadius:  'var(--radius)',
                   cursor:        'pointer',
                   textAlign:     'left',
                   width:         '100%',
-                  transition:    'border-color .15s',
+                  transition:    'border-color .15s, background .15s',
                 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--text)'; (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-3)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-2)'; }}
               >
                 <span style={{ fontSize: '2rem', lineHeight: 1 }}>{cfg.emoji}</span>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text)' }}>{cfg.label}</div>
                   <div style={{ fontSize: '0.83rem', color: 'var(--text-2)', marginTop: '0.2rem' }}>{cfg.desc}</div>
                 </div>
-                <div style={{ marginLeft: 'auto', color: 'var(--text-3)' }}>→</div>
+                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)', background: 'var(--bg-3)', border: '0.5px solid var(--border)', borderRadius: 20, padding: '0.3rem 0.75rem', whiteSpace: 'nowrap' }}>
+                  Seleziona →
+                </div>
               </button>
             ))}
             <div className="social-proof-card" style={{ marginTop: '0.5rem' }}>
