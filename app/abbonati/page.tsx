@@ -448,7 +448,7 @@ export default function AbbonatiPage() {
           </p>
           <p style={{ color: 'var(--text-3)', fontSize: '0.8rem', marginTop: '1rem', fontFamily: 'var(--font-mono)' }}>
             Non vedi nulla? Controlla spam o scrivi a{' '}
-            <a href="mailto:info@lepefy.it">info@lepefy.it</a>
+            <a href="mailto:ciao@lepefy.it">ciao@lepefy.it</a>
           </p>
           <Link href="/deals" className="sub-btn" style={{ display: 'inline-block', marginTop: '1.5rem', textDecoration: 'none' }}>
             Esplora i deal pubblici →
@@ -715,7 +715,7 @@ export default function AbbonatiPage() {
             <div>
               <div className="footer-col-title">Contatti</div>
               <ul className="footer-links">
-                <li><a href="mailto:info@lepefy.it">✉️ Email</a></li>
+                <li><a href="mailto:ciao@lepefy.it">✉️ Email</a></li>
                 <li><a href="/privacy">🔒 Privacy Policy</a></li>
               </ul>
             </div>
