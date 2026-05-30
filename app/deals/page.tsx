@@ -104,7 +104,7 @@ export default async function DealsPage() {
               <div className="footer-col-title">Contatti</div>
               <ul className="footer-links">
                 <li><a href="https://t.me/lepefy">✈️ Telegram</a></li>
-                <li><a href="mailto:info@lepefy.it">✉️ Email</a></li>
+                <li><a href="mailto:ciao@lepefy.it">✉️ Email</a></li>
                 <li><a href="/privacy">🔒 Privacy Policy</a></li>
               </ul>
             </div>
