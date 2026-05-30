@@ -18,7 +18,7 @@ const SECTIONS = [
         <p>
           Il titolare del trattamento dei dati personali è <strong>Lepefy</strong> (di seguito
           «Titolare»), raggiungibile all&apos;indirizzo email{' '}
-          <a href="mailto:info@lepefy.it">info@lepefy.it</a>.
+          <a href="mailto:ciao@lepefy.it">ciao@lepefy.it</a>.
         </p>
         <p>
           Per qualsiasi domanda relativa al trattamento dei tuoi dati puoi scriverci in qualsiasi
@@ -115,7 +115,7 @@ const SECTIONS = [
         </ul>
         <p>
           L&apos;elenco aggiornato dei responsabili del trattamento è disponibile su richiesta
-          scrivendo a <a href="mailto:info@lepefy.it">info@lepefy.it</a>.
+          scrivendo a <a href="mailto:ciao@lepefy.it">ciao@lepefy.it</a>.
         </p>
       </>
     ),
@@ -169,7 +169,7 @@ const SECTIONS = [
         </ul>
         <p>
           Per esercitare i tuoi diritti scrivi a{' '}
-          <a href="mailto:info@lepefy.it">info@lepefy.it</a>. Risponderemo entro 30 giorni.
+          <a href="mailto:ciao@lepefy.it">ciao@lepefy.it</a>. Risponderemo entro 30 giorni.
           Hai inoltre il diritto di proporre reclamo al{' '}
           <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener noreferrer">
             Garante per la Protezione dei Dati Personali
@@ -311,7 +311,7 @@ export default function PrivacyPage() {
           <div className="privacy-contact-box">
             <h3>Hai domande sulla tua privacy?</h3>
             <p>Scrivici — rispondiamo entro 30 giorni lavorativi.</p>
-            <a href="mailto:info@lepefy.it" className="mission-btn">
+            <a href="mailto:ciao@lepefy.it" className="mission-btn">
               ✉️ Contatta il Titolare
             </a>
           </div>
@@ -577,7 +577,7 @@ export default function PrivacyPage() {
               <div className="footer-col-title">Contatti</div>
               <ul className="footer-links">
                 <li><a href="https://t.me/lepefy">✈️ Telegram</a></li>
-                <li><a href="mailto:info@lepefy.it">✉️ Email</a></li>
+                <li><a href="mailto:ciao@lepefy.it">✉️ Email</a></li>
                 <li><a href="/privacy">🔒 Privacy Policy</a></li>
               </ul>
             </div>
