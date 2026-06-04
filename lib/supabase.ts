@@ -15,6 +15,7 @@ export interface Deal {
   image_url: string | null;
   condition: string | null;
   created_at: string;
+  is_sold: boolean;
 }
 
 export const supabaseHeaders = {
@@ -30,6 +31,7 @@ export async function fetchPublicDeals(): Promise<Deal[]> {
     score:           'gte.6',    // include anche score 6
     margine_stimato: 'gte.80',   // soglia margine più alta per compensare
     created_at:      `lte.${twelveHoursAgo}`,
+    is_sold:         'eq.false',
     order:           'score.desc,margine_stimato.desc', // ordinamento server-side
     limit:           '100',      // filtro finale avviene lato client
   });
