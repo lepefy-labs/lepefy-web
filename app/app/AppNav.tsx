@@ -12,6 +12,7 @@ const tabs = [
 
 const navStyle: React.CSSProperties = {
   position: 'fixed',
+  top: 'auto',
   bottom: 0,
   left: 0,
   right: 0,
