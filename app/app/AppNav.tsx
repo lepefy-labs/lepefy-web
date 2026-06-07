@@ -1,13 +1,13 @@
 'use client'
 
-import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase-client'
+import { usePathname } from 'next/navigation'
 
 const tabs = [
-  { href: '/app/feed',   label: 'Feed',    icon: '⚡' },
-  { href: '/app/saved',  label: 'Salvati', icon: '🔖' },
-  { href: '/app/alerts', label: 'Alert',   icon: '🔔' },
-  { href: '/app/market', label: 'Market',  icon: '📊' },
+  { href: '/app/feed',    label: 'Feed',    icon: '⚡' },
+  { href: '/app/saved',   label: 'Salvati', icon: '🔖' },
+  { href: '/app/alerts',  label: 'Alert',   icon: '🔔' },
+  { href: '/app/market',  label: 'Market',  icon: '📊' },
+  { href: '/app/profile', label: 'Profilo', icon: '👤' },
 ]
 
 const navStyle: React.CSSProperties = {
@@ -52,13 +52,6 @@ const labelStyle: React.CSSProperties = {
 
 export default function AppNav({ userEmail }: { userEmail: string }) {
   const pathname = usePathname()
-  const router = useRouter()
-
-  async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
 
   return (
     <nav style={navStyle}>
@@ -80,10 +73,6 @@ export default function AppNav({ userEmail }: { userEmail: string }) {
           </a>
         )
       })}
-      <button style={{ ...itemStyle, borderTop: '2px solid transparent' }} onClick={handleLogout}>
-        <span style={{ fontSize: 18 }}>👤</span>
-        <span style={{ ...labelStyle, color: '#373D60' }}>Esci</span>
-      </button>
     </nav>
   )
 }
