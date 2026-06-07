@@ -1,4 +1,4 @@
-import '../../(app)/notte-ai.css'
+import '../../app/notte-ai.css'
 
 export default function ConfirmPage() {
   return (

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-client'
-import '../(app)/notte-ai.css'
+import '../app/notte-ai.css'
 
 export default function LoginPage() {
   const router = useRouter()
