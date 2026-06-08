@@ -95,7 +95,7 @@ export default function ProfilePage() {
         if (!res.ok) throw new Error(`Errore ${res.status}`)
         const data: ProfileData = await res.json()
         setSubscriptions(data.subscriptions)
-        const plans = data.subscriptions.map((s) => s.plan)
+        const plans = data.subscriptions.map((s) => s.plan.toUpperCase())
         if (plans.includes('PRO')) setPlan('PRO')
         else if (plans.includes('BETA')) setPlan('BETA')
         else setPlan('FREE')

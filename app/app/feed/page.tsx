@@ -274,7 +274,7 @@ export default function FeedPage() {
     load().catch(() => { setError('Errore fetch'); setLoading(false) })
   }, [])
 
-  const isPro = plan === 'beta' || plan === 'pro'
+  const isPro = plan.toLowerCase() === 'beta' || plan.toLowerCase() === 'pro'
 
   const hasCollector = subscriptions.some((s) => isTrue(s.is_collector))
   const hasRepairer  = subscriptions.some((s) => isTrue(s.include_defective))
@@ -284,13 +284,12 @@ export default function FeedPage() {
     .filter((s) => isTrue(s.is_collector))
     .map((s) => s.keyword)
 
+  const repairerKeywords = subscriptions
+    .filter((s) => isTrue(s.include_defective))
+    .map((s) => s.keyword)
+
   function getDealType(deal: Deal): 'repairer' | 'collector' | 'flipper' {
-    const cond = deal.condition?.toLowerCase() ?? ''
-    if (
-      cond.includes('funzionante') ||
-      cond.includes('difettoso') ||
-      cond.includes('non del tutto')
-    ) return 'repairer'
+    if (deal.keyword && repairerKeywords.includes(deal.keyword)) return 'repairer'
     if (deal.keyword && collectorKeywords.includes(deal.keyword)) return 'collector'
     return 'flipper'
   }
