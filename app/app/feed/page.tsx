@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase-client'
 
 const BACKEND = 'https://lepefy-backend-production.up.railway.app'
-const DELAY_HOURS = 48
 
 interface Deal {
   id: string
@@ -37,6 +36,10 @@ interface Subscription {
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
+function isTrue(v: boolean | string): boolean {
+  return v === true || v === 'true'
+}
+
 function minutesAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
   if (diff < 60) return `${diff}m fa`
@@ -66,8 +69,21 @@ function sourceLabel(src: string): string {
   return src.toUpperCase()
 }
 
-function isTrue(v: boolean | string): boolean {
-  return v === true || v === 'true'
+function balanceDeals(deals: Deal[]): Deal[] {
+  const subito = deals.filter((d) => d.source?.toLowerCase().includes('subito'))
+  const vinted  = deals.filter((d) => d.source?.toLowerCase().includes('vinted'))
+  const other   = deals.filter(
+    (d) =>
+      !d.source?.toLowerCase().includes('subito') &&
+      !d.source?.toLowerCase().includes('vinted')
+  )
+  const balanced: Deal[] = []
+  const maxLen = Math.max(subito.length, vinted.length)
+  for (let i = 0; i < maxLen; i++) {
+    if (subito[i]) balanced.push(subito[i])
+    if (vinted[i]) balanced.push(vinted[i])
+  }
+  return [...balanced, ...other]
 }
 
 // ─── card components ──────────────────────────────────────────────────────────
@@ -80,7 +96,6 @@ function FlipperCard({ deal }: { deal: Deal }) {
       style={{ marginBottom: 12, cursor: deal.url ? 'pointer' : 'default', padding: '14px 16px' }}
       onClick={() => deal.url && window.open(deal.url, '_blank')}
     >
-      {/* Row 1: source badge + HOT + score */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
         <span className={sourceTagClass(deal.source)}>{sourceLabel(deal.source)}</span>
         {hot && (
@@ -95,7 +110,6 @@ function FlipperCard({ deal }: { deal: Deal }) {
         </div>
       </div>
 
-      {/* Row 2: title + keyword */}
       <div style={{ marginBottom: 10 }}>
         <div style={{
           fontFamily: 'var(--na-font-body)',
@@ -118,7 +132,6 @@ function FlipperCard({ deal }: { deal: Deal }) {
         )}
       </div>
 
-      {/* Row 3: price + market */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 10 }}>
         <span className="na-price" style={{ fontSize: 22 }}>€{deal.price_value}</span>
         {deal.margine_stimato !== null && (
@@ -128,7 +141,6 @@ function FlipperCard({ deal }: { deal: Deal }) {
         )}
       </div>
 
-      {/* Row 4: margin bar */}
       {deal.margin !== null && (
         <div style={{ marginBottom: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -150,7 +162,6 @@ function FlipperCard({ deal }: { deal: Deal }) {
         </div>
       )}
 
-      {/* Row 5: location + time + save */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
         {deal.location && (
           <span style={{ fontFamily: 'var(--na-font-mono)', fontSize: 10, color: 'var(--na-text3)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -228,6 +239,11 @@ function RepairerCard({ deal }: { deal: Deal }) {
             {deal.condition}
           </span>
         )}
+        {deal.location && (
+          <span style={{ fontFamily: 'var(--na-font-mono)', fontSize: 10, color: 'var(--na-text3)', marginLeft: 'auto' }}>
+            📍 {deal.location}
+          </span>
+        )}
       </div>
     </div>
   )
@@ -274,40 +290,56 @@ export default function FeedPage() {
     load().catch(() => { setError('Errore fetch'); setLoading(false) })
   }, [])
 
-  const isPro = plan.toLowerCase() === 'beta' || plan.toLowerCase() === 'pro'
+  // ─── derived state (dopo load) ───────────────────────────────────────────────
+
+  const isPro = plan === 'beta' || plan === 'pro'
 
   const hasCollector = subscriptions.some((s) => isTrue(s.is_collector))
   const hasRepairer  = subscriptions.some((s) => isTrue(s.include_defective))
-  const isMultiProfile = [true, hasCollector, hasRepairer].filter(Boolean).length > 1
+  const isMultiProfile = (hasCollector ? 1 : 0) + (hasRepairer ? 1 : 0) + 1 > 1
 
   const collectorKeywords = subscriptions
     .filter((s) => isTrue(s.is_collector))
     .map((s) => s.keyword)
 
-  const repairerKeywords = subscriptions
-    .filter((s) => isTrue(s.include_defective))
-    .map((s) => s.keyword)
-
   function getDealType(deal: Deal): 'repairer' | 'collector' | 'flipper' {
-    if (deal.keyword && repairerKeywords.includes(deal.keyword)) return 'repairer'
+    if (deal.condition === 'Non del tutto funzionante') return 'repairer'
     if (deal.keyword && collectorKeywords.includes(deal.keyword)) return 'collector'
     return 'flipper'
   }
 
-  // free tier
-  const tieredDeals = isPro
+  // ─── free tier (score null = collector/repairer, nessun delay) ───────────────
+
+  const dealsToShow = isPro
     ? deals
     : deals
-        .filter((d) => (Date.now() - new Date(d.created_at).getTime()) / 36e5 >= DELAY_HOURS)
+        .filter((d) => {
+          if (d.score === null) return true
+          const hoursAgo = (Date.now() - new Date(d.created_at).getTime()) / 36e5
+          return hoursAgo >= 48
+        })
         .slice(0, 10)
 
-  // combined filters
-  const visibleDeals = tieredDeals.filter((deal) => {
+  // ─── bilanciamento subito/vinted sui flipper ─────────────────────────────────
+
+  const flipperDeals   = dealsToShow.filter((d) => getDealType(d) === 'flipper')
+  const collectorDeals = dealsToShow.filter((d) => getDealType(d) === 'collector')
+  const repairerDeals  = dealsToShow.filter((d) => getDealType(d) === 'repairer')
+
+  const balancedDeals = [
+    ...balanceDeals(flipperDeals),
+    ...collectorDeals,
+    ...repairerDeals,
+  ]
+
+  // ─── filtri combinati ────────────────────────────────────────────────────────
+
+  const visibleDeals = balancedDeals.filter((deal) => {
     const matchesPlatform =
       filter === 'tutti' ||
+      (filter === 'score 9+' && (deal.score ?? 0) >= 9) ||
       (filter === 'subito'   && deal.source?.toLowerCase().includes('subito')) ||
-      (filter === 'vinted'   && deal.source?.toLowerCase().includes('vinted')) ||
-      (filter === 'score 9+' && (deal.score ?? 0) >= 9)
+      (filter === 'vinted'   && deal.source?.toLowerCase().includes('vinted'))
 
     const matchesProfile =
       profileFilter === 'tutti i profili' ||
