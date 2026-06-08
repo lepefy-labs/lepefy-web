@@ -29,13 +29,13 @@ interface Subscription {
   min_threshold: number | null
   max_threshold: number | null
   active: boolean
-  is_collector: boolean
-  include_defective: boolean
+  is_collector: boolean | string
+  include_defective: boolean | string
   source: string | null
   plan: string
 }
 
-// ─── helpers ────────────────────────────────────────────────────────────────
+// ─── helpers ─────────────────────────────────────────────────────────────────
 
 function minutesAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
@@ -52,13 +52,6 @@ function marginColor(pct: number | null): string {
   return '#FFB800'
 }
 
-function sourceLabel(src: string): string {
-  const l = src.toLowerCase()
-  if (l.includes('subito')) return 'SUBITO'
-  if (l.includes('vinted')) return 'VINTED'
-  return src.toUpperCase()
-}
-
 function sourceTagClass(src: string): string {
   const l = src.toLowerCase()
   if (l.includes('subito')) return 'na-tag na-tag-subito'
@@ -66,7 +59,18 @@ function sourceTagClass(src: string): string {
   return 'na-tag na-tag-indigo'
 }
 
-// ─── card components ─────────────────────────────────────────────────────────
+function sourceLabel(src: string): string {
+  const l = src.toLowerCase()
+  if (l.includes('subito')) return 'SUBITO'
+  if (l.includes('vinted')) return 'VINTED'
+  return src.toUpperCase()
+}
+
+function isTrue(v: boolean | string): boolean {
+  return v === true || v === 'true'
+}
+
+// ─── card components ──────────────────────────────────────────────────────────
 
 function FlipperCard({ deal }: { deal: Deal }) {
   const hot = (deal.score ?? 0) >= 9
@@ -116,9 +120,7 @@ function FlipperCard({ deal }: { deal: Deal }) {
 
       {/* Row 3: price + market */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 10 }}>
-        <span className="na-price" style={{ fontSize: 22 }}>
-          €{deal.price_value}
-        </span>
+        <span className="na-price" style={{ fontSize: 22 }}>€{deal.price_value}</span>
         {deal.margine_stimato !== null && (
           <span style={{ fontFamily: 'var(--na-font-mono)', fontSize: 11, color: 'var(--na-text3)' }}>
             Mercato ~€{deal.margine_stimato + deal.price_value}
@@ -126,16 +128,11 @@ function FlipperCard({ deal }: { deal: Deal }) {
         )}
       </div>
 
-      {/* Row 4: margin */}
+      {/* Row 4: margin bar */}
       {deal.margin !== null && (
         <div style={{ marginBottom: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <span style={{
-              fontFamily: 'var(--na-font-mono)',
-              fontSize: 13,
-              fontWeight: 700,
-              color: marginColor(deal.margin_pct),
-            }}>
+            <span style={{ fontFamily: 'var(--na-font-mono)', fontSize: 13, fontWeight: 700, color: marginColor(deal.margin_pct) }}>
               +€{deal.margin}
             </span>
             {deal.margin_pct !== null && (
@@ -147,10 +144,7 @@ function FlipperCard({ deal }: { deal: Deal }) {
           <div className="na-margin-bar">
             <div
               className="na-margin-fill"
-              style={{
-                width: `${Math.min(deal.margin_pct ?? 0, 100)}%`,
-                background: marginColor(deal.margin_pct),
-              }}
+              style={{ width: `${Math.min(deal.margin_pct ?? 0, 100)}%`, background: marginColor(deal.margin_pct) }}
             />
           </div>
         </div>
@@ -169,7 +163,7 @@ function FlipperCard({ deal }: { deal: Deal }) {
         <button
           className="na-btn na-btn-ghost"
           style={{ padding: '4px 10px', fontSize: 10, marginLeft: 4 }}
-          onClick={(e) => { e.stopPropagation() }}
+          onClick={(e) => e.stopPropagation()}
         >
           🔖 Salva
         </button>
@@ -186,7 +180,7 @@ function CollectorCard({ deal }: { deal: Deal }) {
       onClick={() => deal.url && window.open(deal.url, '_blank')}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-        <span className="na-tag na-tag-vinted">VINTED</span>
+        <span className={sourceTagClass(deal.source)}>{sourceLabel(deal.source)}</span>
       </div>
       <div style={{ fontFamily: 'var(--na-font-body)', fontSize: 14, fontWeight: 700, color: 'var(--na-text)', marginBottom: 4, lineHeight: 1.35 }}>
         {deal.title}
@@ -221,7 +215,7 @@ function RepairerCard({ deal }: { deal: Deal }) {
       onClick={() => deal.url && window.open(deal.url, '_blank')}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-        <span className="na-tag na-tag-vinted">VINTED</span>
+        <span className={sourceTagClass(deal.source)}>{sourceLabel(deal.source)}</span>
         <span className="na-tag na-tag-yellow">DIFETTOSO</span>
       </div>
       <div style={{ fontFamily: 'var(--na-font-body)', fontSize: 14, fontWeight: 700, color: 'var(--na-text)', marginBottom: 8, lineHeight: 1.35 }}>
@@ -239,9 +233,9 @@ function RepairerCard({ deal }: { deal: Deal }) {
   )
 }
 
-// ─── main component ───────────────────────────────────────────────────────────
+// ─── main ─────────────────────────────────────────────────────────────────────
 
-type FilterType = 'tutti' | 'subito' | 'vinted' | 'score9'
+type PlatformFilter = 'tutti' | 'subito' | 'vinted' | 'score 9+'
 
 export default function FeedPage() {
   const [deals, setDeals] = useState<Deal[]>([])
@@ -249,7 +243,8 @@ export default function FeedPage() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filter, setFilter] = useState<FilterType>('tutti')
+  const [filter, setFilter] = useState<PlatformFilter>('tutti')
+  const [profileFilter, setProfileFilter] = useState('tutti i profili')
 
   useEffect(() => {
     const load = async () => {
@@ -280,32 +275,62 @@ export default function FeedPage() {
   }, [])
 
   const isPro = plan === 'beta' || plan === 'pro'
-  const isCollector = subscriptions.some((s) => s.is_collector)
-  const isRepairer = subscriptions.some((s) => s.include_defective)
 
-  // free tier filter
+  const hasCollector = subscriptions.some((s) => isTrue(s.is_collector))
+  const hasRepairer  = subscriptions.some((s) => isTrue(s.include_defective))
+  const isMultiProfile = [true, hasCollector, hasRepairer].filter(Boolean).length > 1
+
+  const collectorKeywords = subscriptions
+    .filter((s) => isTrue(s.is_collector))
+    .map((s) => s.keyword)
+
+  function getDealType(deal: Deal): 'repairer' | 'collector' | 'flipper' {
+    const cond = deal.condition?.toLowerCase() ?? ''
+    if (
+      cond.includes('funzionante') ||
+      cond.includes('difettoso') ||
+      cond.includes('non del tutto')
+    ) return 'repairer'
+    if (deal.keyword && collectorKeywords.includes(deal.keyword)) return 'collector'
+    return 'flipper'
+  }
+
+  // free tier
   const tieredDeals = isPro
     ? deals
     : deals
-        .filter((d) => {
-          const hoursAgo = (Date.now() - new Date(d.created_at).getTime()) / 36e5
-          return hoursAgo >= DELAY_HOURS
-        })
+        .filter((d) => (Date.now() - new Date(d.created_at).getTime()) / 36e5 >= DELAY_HOURS)
         .slice(0, 10)
 
-  // pro filters
-  const filteredDeals = isPro ? tieredDeals.filter((d) => {
-    if (filter === 'subito') return d.source.toLowerCase().includes('subito')
-    if (filter === 'vinted') return d.source.toLowerCase().includes('vinted')
-    if (filter === 'score9') return (d.score ?? 0) >= 9
-    return true
-  }) : tieredDeals
+  // combined filters
+  const visibleDeals = tieredDeals.filter((deal) => {
+    const matchesPlatform =
+      filter === 'tutti' ||
+      (filter === 'subito'   && deal.source?.toLowerCase().includes('subito')) ||
+      (filter === 'vinted'   && deal.source?.toLowerCase().includes('vinted')) ||
+      (filter === 'score 9+' && (deal.score ?? 0) >= 9)
 
-  const proFilters: { key: FilterType; label: string }[] = [
-    { key: 'tutti',  label: 'Tutti' },
-    { key: 'subito', label: 'Subito' },
-    { key: 'vinted', label: 'Vinted' },
-    { key: 'score9', label: 'Score 9+' },
+    const matchesProfile =
+      profileFilter === 'tutti i profili' ||
+      (profileFilter === 'flipper'       && getDealType(deal) === 'flipper') ||
+      (profileFilter === 'collezionista' && getDealType(deal) === 'collector') ||
+      (profileFilter === 'riparatore'    && getDealType(deal) === 'repairer')
+
+    return matchesPlatform && matchesProfile
+  })
+
+  const platformFilters: { key: PlatformFilter; label: string }[] = [
+    { key: 'tutti',    label: 'Tutti' },
+    { key: 'subito',   label: 'Subito' },
+    { key: 'vinted',   label: 'Vinted' },
+    { key: 'score 9+', label: 'Score 9+' },
+  ]
+
+  const profileFilters = [
+    'tutti i profili',
+    'flipper',
+    ...(hasCollector ? ['collezionista'] : []),
+    ...(hasRepairer  ? ['riparatore']    : []),
   ]
 
   return (
@@ -316,23 +341,40 @@ export default function FeedPage() {
           <h1 className="na-title" style={{ fontSize: 22 }}>Deal Live</h1>
           <span className="na-live-dot" />
           <span style={{ fontFamily: 'var(--na-font-mono)', fontSize: 10, color: 'var(--na-text3)', marginLeft: 2 }}>
-            {loading ? '...' : `${filteredDeals.length} deal · aggiornato oggi`}
+            {loading ? '...' : `${visibleDeals.length} deal · aggiornato oggi`}
           </span>
         </div>
 
         {isPro && (
-          <div className="na-filters">
-            {proFilters.map((f) => (
-              <button
-                key={f.key}
-                onClick={() => setFilter(f.key)}
-                className={`na-filter-pill ${filter === f.key ? 'na-filter-pill-active' : 'na-filter-pill-idle'}`}
-                style={{ border: 'none', cursor: 'pointer' }}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="na-filters">
+              {platformFilters.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setFilter(f.key)}
+                  className={`na-filter-pill ${filter === f.key ? 'na-filter-pill-active' : 'na-filter-pill-idle'}`}
+                  style={{ border: 'none', cursor: 'pointer' }}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            {isMultiProfile && (
+              <div className="na-filters" style={{ marginTop: 8 }}>
+                {profileFilters.map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setProfileFilter(f)}
+                    className={`na-filter-pill ${profileFilter === f ? 'na-filter-pill-active' : 'na-filter-pill-idle'}`}
+                    style={{ border: 'none', cursor: 'pointer' }}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -381,7 +423,7 @@ export default function FeedPage() {
           </div>
         )}
 
-        {!loading && !error && filteredDeals.length === 0 && (
+        {!loading && !error && visibleDeals.length === 0 && (
           <div style={{ padding: '2rem', textAlign: 'center' }}>
             <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔍</div>
             <div style={{ color: 'var(--na-text2)', fontFamily: 'var(--na-font-body)', fontSize: '14px' }}>
@@ -392,9 +434,10 @@ export default function FeedPage() {
           </div>
         )}
 
-        {!loading && !error && filteredDeals.map((deal) => {
-          if (isRepairer) return <RepairerCard key={deal.id} deal={deal} />
-          if (isCollector) return <CollectorCard key={deal.id} deal={deal} />
+        {!loading && !error && visibleDeals.map((deal) => {
+          const type = getDealType(deal)
+          if (type === 'repairer') return <RepairerCard key={deal.id} deal={deal} />
+          if (type === 'collector') return <CollectorCard key={deal.id} deal={deal} />
           return <FlipperCard key={deal.id} deal={deal} />
         })}
       </div>
